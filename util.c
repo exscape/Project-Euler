@@ -200,6 +200,7 @@ inline uint8_t get_digit(uint64_t num, uint8_t digit) {
 	assert (digit <= 19); /* 10^20 > 2^64! Overflow which causes incorrect results! */
 	return ( (num % int_pow(10,digit)) / (int_pow(10,digit)/10) );
 }
+// test branch add
 
 /*
 int main()
