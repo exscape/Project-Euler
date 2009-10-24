@@ -265,3 +265,21 @@ uint8_t is_anagram(uint64_t num1, uint64_t num2) {
 	 * at compile time, so it doesn't matter. */
 	return (memcmp(seen1, seen2, (sizeof(uint8_t) * 10)) == 0);
 }
+
+/*
+ * num: the GMP integer to work with
+ * return value: a regular uint64_t with the digital sum
+ */
+uint64_t gmp_digital_sum(const mpz_t in_num) {
+	uint64_t sum = 0;
+	mpz_t num;
+	mpz_init_set(num, in_num);
+
+	while (mpz_cmp_ui(num, 0) != 0) { // Works like strcmp, 0 == equal, so loop while num isn't 0
+		sum += mpz_fdiv_ui(num, 10);  // sum += num % 10
+		mpz_tdiv_q_ui(num, num, 10);  // num /= 10;
+	}
+
+	mpz_clear(num);
+	return sum;
+}
