@@ -4,7 +4,8 @@ problem_??
 problem_???
 _Kom_ihåg_att_köra_git_add
 a.out
-gmptest.c
 
 !*.c
 !*.h
+
+gmptest.c
