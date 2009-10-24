@@ -71,17 +71,42 @@ void test_is_anagram() {
 }
 
 void test_is_pandigital() {
-	uint64_t errcount = 0;
+//	uint64_t errcount = 0;
 	printf("Implement test_is_pandigital()!\n");
 //	printf("Done testing is_pandigital, %llu errors\n", errcount);
 }
 
+void test_substr() {
+	char *str = "ABCDEF";
+
+	printf("Positive start tests:\n");
+	printf("substr(str, 0, 0): %s (expect ABCDEF)\n", substr(str, 0, 0));
+	printf("substr(str, 1, 0): %s (expect BCDEF)\n", substr(str, 1, 0));
+	printf("substr(str, 0, 2): %s (expect AB)\n", substr(str, 0, 2));
+	printf("substr(str, 4, 0): %s (expect EF)\n", substr(str, 4, 0));
+	printf("substr(str, 5, 0): %s (expect F)\n", substr(str, 5, 0));
+	printf("substr(str, 3, 2): %s (expect DE)\n", substr(str, 3, 2));
+
+	printf("Negative start tests:\n");
+	printf("substr(str, -1, 0): %s (expect F)\n", substr(str, 3, 2));
+	printf("substr(str, -3, 1): %s (expect D)\n", substr(str, 3, 2));
+	printf("substr(str, -4, 0): %s (expect CDEF)\n", substr(str, 3, 2));
+
+	// These are erroneous:
+	printf("substr(str, 6, 2): %s (expect failure)\n", substr(str, 6, 2));
+	printf("substr(str, 1, 10): %s (expect failure)\n", substr(str, 6, 2));
+	printf("substr(str, -10, 0): %s (expect failure)\n", substr(str, -15, 0));
+	printf("substr(str, -10, 12): %s (expect failure)\n", substr(str, -15, 0));
+}
+
 int main() {
-	test_get_digit();
-	test_get_digit_rev();
-	test_get_length();
-	test_is_pandigital();
-	test_is_anagram();
+	//test_get_digit();
+	//test_get_digit_rev();
+	//test_get_length();
+	//test_is_pandigital();
+	//test_is_anagram();
+	
+	test_substr();
 
 	return 0;
 }

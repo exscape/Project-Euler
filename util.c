@@ -284,3 +284,35 @@ uint64_t gmp_digital_sum(const mpz_t in_num) {
 	mpz_clear(num);
 	return sum;
 }
+
+/*
+ * str: the string to work on
+ * start: the starting offset (0 for the first position, 1 for the second etc.)
+ * length: the length to extract. 0 extract to the rest of the string.
+ */
+char *substr(const char *str, uint32_t start, uint32_t length) {
+	/* TODO/FIXME/XXX: Add support for a negative start */
+	if (str == NULL)
+		return NULL;
+	uint32_t str_length = strlen(str);
+
+	if (start+length > str_length) { // XXX: Off by one error?
+		fprintf(stderr, "Warning: attempted to access outside string boundary in substr()\n");
+		return NULL;
+	}
+
+	if (length == 0) {
+		length = str_length - start; // XXX: Off by one error?
+	}
+
+	char *out = malloc(length + 1); // XXX: Off by one error?
+	if (out == NULL)
+		return NULL;
+
+	char *p = out;
+	for (uint32_t i = start; i < start+length; i++) {
+		*p++ = str[i];
+	}
+
+	return out;
+}
