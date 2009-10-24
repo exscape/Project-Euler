@@ -148,7 +148,7 @@ uint64_t int_pow(const uint64_t base, uint64_t exp) {
  * num: the number to check
  * return value: the number of digits in the number
  */
-uint8_t get_length(uint64_t num) {
+inline uint8_t get_length(uint64_t num) {
 	if (num == 0) 
 		return 1;
 	uint8_t digits = 0;
@@ -204,21 +204,29 @@ inline uint8_t get_digit(uint64_t num, uint8_t digit) {
  * return value: 1 if they're anagrams, otherwise 0
  */
 uint8_t is_anagram(uint64_t num1, uint64_t num2) {
+	if (num1 == num2)
+		return 1;
+
 	uint8_t len1 = get_length(num1);
 	uint8_t len2 = get_length(num2);
 
 	if (len1 != len2)
 		return 0;
-	if (num1 == num2)
-		return 1;
 
 	uint8_t uses1[10] = {0}; /* tracks the use count for each digit */
 	uint8_t uses2[10] = {0}; /* tracks the use count for each digit */
 
+	/*
+	 * These loops are simple, really. We loop through each digit, and increase the 
+	 * number at usesX[n] by one for each occurrence. usesX[0] is then the number of times
+	 * the digit 0 was encountered, etc.
+	 */
 	for (uint8_t digit = 1; digit <= len1; digit++)
 		uses1[get_digit(num1, digit)]++;
 	for (uint8_t digit = 1; digit <= len2; digit++) 
 		uses2[get_digit(num2, digit)]++;
 		
+	/* Also simple: Compare the arrays byte for byte. The sizeof is really unnecessary, but is done
+	 * at compile time, so it doesn't matter. */
 	return (memcmp(uses1, uses2, (sizeof(uint8_t) * 10)) == 0);
 }
