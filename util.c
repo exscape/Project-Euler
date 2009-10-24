@@ -5,8 +5,6 @@
 #include <math.h>
 #include <assert.h>
 
-// Test git cloning
-
 /*
  * n: the fibonacci number
  * return value: the nth fibonacci number (although there seems to be two or more ways to count)
