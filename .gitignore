@@ -1,0 +1,9 @@
+*.o
+problem_?
+problem_??
+problem_???
+_Kom_ihåg_att_köra_git_add
+a.out
+
+!*.c
+!*.h
