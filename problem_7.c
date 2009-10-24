@@ -9,9 +9,9 @@
 #define NUM 10001
 
 int main() {
-	uint16_t num = 0;
+	uint16_t num = 1; // 2 is a prime which the for loop doesn't cover
 	uint64_t i;
-	for (i = 2;; i++) { // FIXME: 3, += 2
+	for (i = 3;; i += 2) {
 		if (isprime(i))
 			num++;
 		if (num == NUM)
