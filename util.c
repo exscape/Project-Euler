@@ -213,20 +213,19 @@ uint8_t is_pandigital(uint64_t num) {
 	if (len > 9)
 		return 0;
 
-	// XXX: This could be [9] with the checks below, IF the code is changed to match
-	uint8_t seen[10] = {0}; /* tracks the use count for each digit */
+	uint8_t seen[9] = {0}; /* tracks the use count for each digit */
 
 	uint8_t d = 0;
 	for (uint8_t digit = 1; digit <= len; digit++) {
 		d = get_digit(num, digit);
 		if (d == 0)
 			return 0; // A pandiginal number is only 1 to n where n is the length; a 0 cannot exist in it
-		if (++seen[d] != 1) {
+		if (++seen[d-1] != 1) {
 			return 0; // This digit is seen more than once; the result cannot be true
 		}
 	}
 
-	for (uint8_t i = len+1; i < 10; i++) { /* +1 to ignore 0, which is never in a pandigital number */
+	for (uint8_t i = len; i < 9; i++) { /* +1 to ignore 0, which is never in a pandigital number */
 		if (seen[i] != 0)
 			return 0;
 	}

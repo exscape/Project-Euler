@@ -67,21 +67,19 @@ void test_get_length() {
 }
 
 void test_is_anagram() {
-	printf("Implement test_fix_anagram()!\n");
+	printf("Implement test_is_anagram()!\n");
 }
 
 void test_is_pandigital() {
-	for (uint32_t i = 0; i<=1000000; i++) {
-		if (is_pandigital(i)) {
-			printf("pandigital: %lu\n", i);
-		}
-	}
+	uint64_t errcount = 0;
+	printf("Implement test_is_pandigital()!\n");
+//	printf("Done testing is_pandigital, %llu errors\n", errcount);
 }
 
 int main() {
-//	test_get_digit();
-//	test_get_digit_rev();
-//	test_get_length();
+	test_get_digit();
+	test_get_digit_rev();
+	test_get_length();
 	test_is_pandigital();
 	test_is_anagram();
 
