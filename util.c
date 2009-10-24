@@ -206,8 +206,8 @@ uint8_t is_pandigital(uint64_t num) {
 	if (num < 10)
 		return 1;
 
-	if (num % 10 == 0 || num % 100 == 0)
-		return 0; // These numbers contain (end with) a 0; XXX: how many of these checks improve performance
+	if (num % 10 == 0)
+		return 0; // These numbers contain (end with) a 0 and thus cannot be pandigital
 
 	uint8_t len = get_length(num);
 	if (len > 9)
