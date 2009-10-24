@@ -197,3 +197,28 @@ inline uint8_t get_digit(uint64_t num, uint8_t digit) {
 	assert (digit <= 19); /* 10^20 > 2^64! Overflow which causes incorrect results! */
 	return ( (num % int_pow(10,digit)) / (int_pow(10,digit)/10) );
 }
+
+/*
+ * num1: first number to compare, with...
+ * num2: the second number
+ * return value: 1 if they're anagrams, otherwise 0
+ */
+uint8_t is_anagram(uint64_t num1, uint64_t num2) {
+	uint8_t len1 = get_length(num1);
+	uint8_t len2 = get_length(num2);
+
+	if (len1 != len2)
+		return 0;
+	if (num1 == num2)
+		return 1;
+
+	uint8_t uses1[10] = {0}; /* tracks the use count for each digit */
+	uint8_t uses2[10] = {0}; /* tracks the use count for each digit */
+
+	for (uint8_t digit = 1; digit <= len1; digit++)
+		uses1[get_digit(num1, digit)]++;
+	for (uint8_t digit = 1; digit <= len2; digit++) 
+		uses2[get_digit(num2, digit)]++;
+		
+	return (memcmp(uses1, uses2, (sizeof(uint8_t) * 10)) == 0);
+}

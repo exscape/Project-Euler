@@ -66,10 +66,15 @@ void test_get_length() {
 	printf("Done testing get_length(), %llu errors\n", errcount);
 }
 
+void test_is_anagram() {
+	printf("Implement test_fix_anagram()!\n");
+}
+
 int main() {
 	test_get_digit();
 	test_get_digit_rev();
 	test_get_length();
+	test_is_anagram();
 
 	return 0;
 }
