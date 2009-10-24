@@ -36,23 +36,6 @@ uint8_t isprime(register uint64_t n)
 }
 
 /*
-// This is only very slightly slower (somewhere around 0.8%)
-uint8_t isprime_old(uint64_t n)
-{
-	if (n == 2)
-		return 1;
-	if ((n & 1) == 0)
-		return 0;
-
-	for (uint64_t i=3; i<= ((uint64_t)sqrt(n))+1; i+=2) {
-		if (n % i == 0)
-			return 0;
-	}
-	return 1;
-}
-*/
-
-/*
  * n: the number for which to count the number of divisors
  * return value: the number of divisors, including 1 and the number itself
  */
@@ -79,7 +62,7 @@ uint64_t num_divisors(uint64_t n) {
  * return value: a malloc()ed string containing the number in binary form, without leading zeroes
  */
 char *bin(uint64_t n) {
-	/* UGLY workaround to the no-leading-zeroes problem! (Which only exists for n = 1...) */
+	/* UGLY workaround to the no-leading-zeroes problem! (Which only exists for n = 0...) */
 	if (n == 0) {
 		char *str = malloc(2);
 		str[0] = '0'; str[1] = 0;
@@ -161,12 +144,26 @@ uint64_t int_pow(const uint64_t base, uint64_t exp) {
 }
 
 /*
+ * NOTE: This is actually faster than log10(num)+1, by ~40%.
  * num: the number to check
  * return value: the number of digits in the number
  */
 uint8_t get_length(uint64_t num) {
+	if (num == 0) 
+		return 1;
+	uint8_t digits = 0;
+	for (uint64_t i = 1; i <= num; i *= 10)
+		digits++;
+
+	return digits;
+}
+
+// The new function is actually ~40%+ faster.
+/*
+uint8_t get_length_old(uint64_t num) {
 	return ( ((int)log10(num)) + 1);
 }
+*/
 
 /*
  * num: the number.
@@ -200,23 +197,3 @@ inline uint8_t get_digit(uint64_t num, uint8_t digit) {
 	assert (digit <= 19); /* 10^20 > 2^64! Overflow which causes incorrect results! */
 	return ( (num % int_pow(10,digit)) / (int_pow(10,digit)/10) );
 }
-
-/*
-int main()
-{
-	// Function test:
-	//char *strings[] = {"abba", "101", "0100", "TEST!", "!ABA!", "BOB", "Bubba", NULL};
-	//for (uint16_t i=0; strings[i] != NULL; i++) {
-		//printf("%hu: %s\n", is_palindrome_str(strings[i]), strings[i]);
-	//}
-
-	// Benchmark
-	//char buf[21] = {0};
-	//for (uint64_t i = 0; i<(1<<26ULL); i++) {
-		//sprintf(buf, "%llu", i);
-		//is_palindrome_str_old(buf);
-	//}
-
-	return 0;
-}
-*/

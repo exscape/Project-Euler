@@ -8,7 +8,8 @@
 // Tests that get_digit() returns the correct value
 void test_get_digit() {
 	uint64_t errcount = 0;
-	char orig[21] = {0}, copy[21] = {0};
+	char orig[21] = {0}, 
+		 copy[21] = {0};
 	
 	  for (uint64_t num = 1000000; num >= 1; num--) {
 	//for (uint64_t num = 1; num <= 100000; num++) {
@@ -29,7 +30,8 @@ void test_get_digit() {
 // Tests that get_digit_rev() returns the correct value
 void test_get_digit_rev() {
 	uint64_t errcount = 0;
-	char orig[21] = {0}, copy[21] = {0};
+	char orig[21] = {0}, 
+		 copy[21] = {0};
 	char *rev; /* pointer to the reversed string */
 	
 	  for (uint64_t num = 1000000; num >= 1; num--) {
@@ -54,7 +56,7 @@ void test_get_digit_rev() {
 void test_get_length() {
 	uint64_t errcount = 0;
 	char buf[21];
-	for (uint32_t i = 0; i <= 1000000; i++) {
+	for (uint32_t i = 0; i <= 10000000; i++) {
 		sprintf(buf, "%lu", i);
 		if (get_length(i) != strlen(buf)) {
 			printf("get_length() error at %lu (get_length() says %hhu, actual length %d)\n", i, get_length(i), strlen(buf));
@@ -66,8 +68,8 @@ void test_get_length() {
 
 int main() {
 	test_get_digit();
-	test_get_length();
 	test_get_digit_rev();
+	test_get_length();
 
 	return 0;
 }
