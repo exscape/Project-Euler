@@ -76,27 +76,49 @@ void test_is_pandigital() {
 //	printf("Done testing is_pandigital, %llu errors\n", errcount);
 }
 
-void test_substr() {
+uint8_t /* bool */ test_substr(const char *str, int start, int length, const char *expect) {
+	char *sub = substr(str, start, length);
+	if (sub == NULL) {
+		fprintf(stderr, "*FAIL* in substr(\"%s\", %d, %d): got NULL!\n", str, start, length);
+		return 0;
+	}
+
+	if (strcmp(sub, expect) != 0) {
+		fprintf(stderr, "*FAIL* in substr(\"%s\", %d, %d): got \"%s\", expected \"%s\"\n", str, start, length, sub, expect);
+		free(sub);
+		return 0;
+	}
+	else {
+		fprintf(stderr, "PASS in substr(\"%s\", %d, %d): got \"%s\", expected \"%s\"\n", str, start, length, sub, expect);
+		free(sub);
+		return 1;
+	}
+}
+
+void test_substr_all() {
 	char *str = "ABCDEF";
 
 	printf("Positive start tests:\n");
-	printf("substr(str, 0, 0): %s (expect ABCDEF)\n", substr(str, 0, 0));
-	printf("substr(str, 1, 0): %s (expect BCDEF)\n", substr(str, 1, 0));
-	printf("substr(str, 0, 2): %s (expect AB)\n", substr(str, 0, 2));
-	printf("substr(str, 4, 0): %s (expect EF)\n", substr(str, 4, 0));
-	printf("substr(str, 5, 0): %s (expect F)\n", substr(str, 5, 0));
-	printf("substr(str, 3, 2): %s (expect DE)\n", substr(str, 3, 2));
+	test_substr(str, 0, 0, "ABCDEF");
+	test_substr(str, 1, 0, "BCDEF");
+	test_substr(str, 0, 3, "ABC");
+	test_substr(str, 4, 0, "EF");
+	test_substr(str, 5, 0, "F");
+	test_substr(str, 3, 2, "DE");
 
+	printf("\n");
 	printf("Negative start tests:\n");
-	printf("substr(str, -1, 0): %s (expect F)\n", substr(str, 3, 2));
-	printf("substr(str, -3, 1): %s (expect D)\n", substr(str, 3, 2));
-	printf("substr(str, -4, 0): %s (expect CDEF)\n", substr(str, 3, 2));
+	test_substr(str, -1, 0, "F");
+	test_substr(str, -3, 1, "D");
+	test_substr(str, -4, 0, "CDEF");
+	test_substr(str, -4, 3, "CDE");
 
-	// These are erroneous:
-	printf("substr(str, 6, 2): %s (expect failure)\n", substr(str, 6, 2));
-	printf("substr(str, 1, 10): %s (expect failure)\n", substr(str, 6, 2));
-	printf("substr(str, -10, 0): %s (expect failure)\n", substr(str, -15, 0));
-	printf("substr(str, -10, 12): %s (expect failure)\n", substr(str, -15, 0));
+	printf("\n");
+	printf("The following should fail:\n");
+	test_substr(str, 6, 2, "(null)");
+	test_substr(str, 1, 10, "(null)");
+	test_substr(str, -10, 0, "(null)");
+	test_substr(str, -10, 12, "(null)");
 }
 
 int main() {
@@ -106,7 +128,7 @@ int main() {
 	//test_is_pandigital();
 	//test_is_anagram();
 	
-	test_substr();
+	test_substr_all();
 
 	return 0;
 }
