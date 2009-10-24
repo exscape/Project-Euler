@@ -148,7 +148,7 @@ uint64_t int_pow(const uint64_t base, uint64_t exp) {
  * num: the number to check
  * return value: the number of digits in the number
  */
-inline uint8_t get_length(uint64_t num) {
+/*inline*/ uint8_t get_length(uint64_t num) {
 	if (num == 0) 
 		return 1;
 	uint8_t digits = 0;
@@ -184,7 +184,7 @@ uint8_t get_digit_rev(uint64_t num, uint8_t digit) {
  * digit: the number, where 1 = the LEFTMOST digit, 2 = the second-to-leftmost etc.
  * return value: the digit.
  */
-inline uint8_t get_digit(uint64_t num, uint8_t digit) {
+/*inline*/ uint8_t get_digit(uint64_t num, uint8_t digit) {
 	assert(digit != 0);
 	uint8_t log_value = (uint8_t)log10(num);
 
@@ -198,6 +198,42 @@ inline uint8_t get_digit(uint64_t num, uint8_t digit) {
 	return ( (num % int_pow(10,digit)) / (int_pow(10,digit)/10) );
 }
 
+/*
+ * num: the number to check for "pandigitality"
+ * return value: 1 if it's pandigital, 0 otherwise
+ */
+uint8_t is_pandigital(uint64_t num) {
+	if (num < 10)
+		return 1;
+
+	if (num % 10 == 0 || num % 100 == 0)
+		return 0; // These numbers contain (end with) a 0; XXX: how many of these checks improve performance
+
+	uint8_t len = get_length(num);
+	if (len > 9)
+		return 0;
+
+	// XXX: This could be [9] with the checks below, IF the code is changed to match
+	uint8_t seen[10] = {0}; /* tracks the use count for each digit */
+
+	uint8_t d = 0;
+	for (uint8_t digit = 1; digit <= len; digit++) {
+		d = get_digit(num, digit);
+		if (d == 0)
+			return 0; // A pandiginal number is only 1 to n where n is the length; a 0 cannot exist in it
+		if (++seen[d] != 1) {
+			return 0; // This digit is seen more than once; the result cannot be true
+		}
+	}
+
+	for (uint8_t i = len+1; i < 10; i++) { /* +1 to ignore 0, which is never in a pandigital number */
+		if (seen[i] != 0)
+			return 0;
+	}
+
+	return 1;
+}
+		
 /*
  * num1: first number to compare, with...
  * num2: the second number
@@ -213,20 +249,20 @@ uint8_t is_anagram(uint64_t num1, uint64_t num2) {
 	if (len1 != len2)
 		return 0;
 
-	uint8_t uses1[10] = {0}; /* tracks the use count for each digit */
-	uint8_t uses2[10] = {0}; /* tracks the use count for each digit */
+	uint8_t seen1[10] = {0}; /* tracks the use count for each digit */
+	uint8_t seen2[10] = {0}; /* tracks the use count for each digit */
 
 	/*
 	 * These loops are simple, really. We loop through each digit, and increase the 
-	 * number at usesX[n] by one for each occurrence. usesX[0] is then the number of times
+	 * number at seenX[n] by one for each occurrence. seenX[0] is then the number of times
 	 * the digit 0 was encountered, etc.
 	 */
 	for (uint8_t digit = 1; digit <= len1; digit++)
-		uses1[get_digit(num1, digit)]++;
+		seen1[get_digit(num1, digit)]++;
 	for (uint8_t digit = 1; digit <= len2; digit++) 
-		uses2[get_digit(num2, digit)]++;
+		seen2[get_digit(num2, digit)]++;
 		
 	/* Also simple: Compare the arrays byte for byte. The sizeof is really unnecessary, but is done
 	 * at compile time, so it doesn't matter. */
-	return (memcmp(uses1, uses2, (sizeof(uint8_t) * 10)) == 0);
+	return (memcmp(seen1, seen2, (sizeof(uint8_t) * 10)) == 0);
 }
