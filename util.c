@@ -317,7 +317,8 @@ char *substr(const char *str, int start, int length) {
 	}
 
 	// Make sure we stay within the bounds of "str"
-	if (start+length > str_length || str <= ( (char *) ( (unsigned long)start + (unsigned long)length ) )) { // XXX: OBOE?
+	if (start+length > str_length || 
+		str <= ( (char *) ( (unsigned long)start + (unsigned long)length ) )) { // XXX: OBOE?
 		return NULL;
 	}
 
