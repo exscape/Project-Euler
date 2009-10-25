@@ -290,7 +290,7 @@ uint64_t gmp_digital_sum(const mpz_t in_num) {
  * start: the starting offset (0 for the first position, 1 for the second etc.; negative offsets count from the end of the string, -1 being the last)
  * length: the length to extract. 0 extracts the remainder of the string.
  */
-char *substr(const char *str, int start, uint32_t length) {
+char *substr(const char *str, int start, int length) {
 	if (str == NULL)
 		return NULL;
 	const uint32_t str_length = strlen(str);
@@ -307,9 +307,14 @@ char *substr(const char *str, int start, uint32_t length) {
 	if (length == 0) {
 		length = str_length - start;
 	}
+	else if (length < 0) {
+		length = str_length - (-length);
+	}
+
+	assert(start >= 0 && length >= 0); // XXX: debug
 
 	// Make sure we stay within the bounds of "str"
-	if (start+length > str_length) {
+	if (start+length > str_length || str <= ( (char *) ( (unsigned long)start + (unsigned long)length ) )) { // XXX: OBOE?
 		return NULL;
 	}
 

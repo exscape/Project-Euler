@@ -79,7 +79,7 @@ void test_is_pandigital() {
 uint8_t /* num_errors */ test_substr(const char *str, int start, int length, const char *expect) {
 	char *sub = substr(str, start, length);
 	if (sub == NULL) {
-		fprintf(stderr, "*FAIL* in substr(\"%s\", %d, %d): got NULL!\n", str, start, length);
+		fprintf(stderr, "*FAIL* in substr(\"%s\", %d, %d): got NULL, expected \"%s\"!\n", str, start, length, expect);
 		return 1;
 	}
 
@@ -89,7 +89,7 @@ uint8_t /* num_errors */ test_substr(const char *str, int start, int length, con
 		return 1;
 	}
 	else {
-//		fprintf(stderr, "PASS in substr(\"%s\", %d, %d): got \"%s\", expected \"%s\"\n", str, start, length, sub, expect);
+		fprintf(stderr, "PASS in substr(\"%s\", %d, %d): got \"%s\", expected \"%s\"\n", str, start, length, sub, expect);
 		free(sub);
 		return 0;
 	}
@@ -147,6 +147,24 @@ void test_substr_all(uint8_t quiet) {
 	if (!quiet && errcount == 0)
 		printf("All OK\n");
 
+	/*
+	 * $rest = substr("abcdef", 0, -1);  // returns "abcde"
+	 * $rest = substr("abcdef", 2, -1);  // returns "cde"
+	 * $rest = substr("abcdef", 4, -4);  // returns ""
+	 * $rest = substr("abcdef", -3, -1); // returns "de"
+	 */
+
+	if (!quiet) {
+		printf("\n");
+		printf("Negative length (and also start) tests:\n");
+	}
+		errcount += test_substr(str, 0, -1, "ABCDE");
+		errcount += test_substr(str, 0, -3, "ABC");
+		errcount += test_substr(str, 0, -4, "AB");
+		errcount += test_substr(str, 2, -1, "CDE");
+		errcount += test_substr(str, 4, -4, "");
+		errcount += test_substr(str, -3, -1, "DE");
+
 	if (!quiet) {
 		printf("\n");
 		printf("The following should fail:\n");
@@ -163,12 +181,12 @@ void test_substr_all(uint8_t quiet) {
 }
 
 int main() {
-	test_get_digit();
-	test_get_digit_rev();
-	test_get_length();
-	test_is_pandigital();
-	test_is_anagram();
-	test_substr_all(1); // 1 = quiet mode on
+	//test_get_digit();
+	//test_get_digit_rev();
+	//test_get_length();
+	//test_is_pandigital();
+	//test_is_anagram();
+	test_substr_all(0); // 1 = quiet mode on
 
 	return 0;
 }
