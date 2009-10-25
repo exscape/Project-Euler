@@ -335,4 +335,30 @@ char *substr(const char *str, int start, int length) {
 	return out;
 }
 
+/*
+ * n: the fibonacci number
+ * return value: a pointer to a GMP integer containing the value
+ * notes: This is UGLY CODE, and I have to admit I didn't create the algorithm
+ * itself, only the GMP implementation. I'm also not sure whether the malloc
+ * and returning a pointer are really necessary.
+ */
+mpz_t *gmp_fib(uint64_t n) {
+	mpz_t f, f_2; /* represents the current number, and f-2 */
+	mpz_t *f_1 = malloc(sizeof(mpz_t)); /* represents f-1 (and the answer) */
+
+	mpz_init_set_ui(*f_1, 1);
+	mpz_init_set_ui(f_2, 2);
+	mpz_init(f);
+
+	for (uint64_t i = 3; i <= n; i++) {
+		mpz_add(f, *f_1, f_2);
+		mpz_set(*f_1, f_2);
+		mpz_set(f_2, f);
+	}
+	mpz_clear(f_2);
+	mpz_clear(f);
+
+	return f_1;
+}
+
 // TODO: gmp_get_digit()?
