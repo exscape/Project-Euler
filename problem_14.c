@@ -26,6 +26,6 @@ int main() {
 		}
 	}
 
-	printf("Answer: %lu (len %lu)\n", max_num, max_len);
+	printf("Answer: %u (len %u)\n", max_num, max_len);
 	return 0;
 }

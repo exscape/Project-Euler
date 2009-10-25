@@ -19,7 +19,7 @@ int main() {
 		}
 	}
 
-	printf("Answer: %lu\n", max);
+	printf("Answer: %u\n", max);
 
 	return 0;
 }

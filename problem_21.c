@@ -25,6 +25,6 @@ int main() {
 		}
 	}
 
-	printf("Answer: %lu\n", sum);
+	printf("Answer: %u\n", sum);
 	return 0;
 }

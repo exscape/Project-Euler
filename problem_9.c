@@ -12,7 +12,7 @@ int main() {
 //			for (c=b; c<1000; c++) { /* NOTE: Despite the nested loops, this runs in FAR less than 1 second. */
 			c = 1000-a-b; /* Copied from an old solution */
 				if (a+b+c == 1000 && (a*a + b*b) == c*c) {
-					printf("Answer: %lu\n", a*b*c);
+					printf("Answer: %u\n", a*b*c);
 					return 0;
 				}
 //			}
