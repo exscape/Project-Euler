@@ -147,23 +147,19 @@ void test_substr_all(uint8_t quiet) {
 	if (!quiet && errcount == 0)
 		printf("All OK\n");
 
-	/*
-	 * $rest = substr("abcdef", 0, -1);  // returns "abcde"
-	 * $rest = substr("abcdef", 2, -1);  // returns "cde"
-	 * $rest = substr("abcdef", 4, -4);  // returns ""
-	 * $rest = substr("abcdef", -3, -1); // returns "de"
-	 */
-
 	if (!quiet) {
 		printf("\n");
 		printf("Negative length (and also start) tests:\n");
 	}
-		errcount += test_substr(str, 0, -1, "ABCDE");
-		errcount += test_substr(str, 0, -3, "ABC");
-		errcount += test_substr(str, 0, -4, "AB");
-		errcount += test_substr(str, 2, -1, "CDE");
-		errcount += test_substr(str, 4, -4, "");
-		errcount += test_substr(str, -3, -1, "DE");
+	errcount += test_substr(str, 0, -1, "ABCDE");
+	errcount += test_substr(str, 0, -3, "ABC");
+	errcount += test_substr(str, 0, -4, "AB");
+	errcount += test_substr(str, 2, -1, "CDE");
+	errcount += test_substr(str, -3, -1, "DE");
+	errcount += test_substr(str, 4, -4, "");
+	errcount += test_substr(str, 4, -1, "E");
+	if (!quiet && errcount == 0)
+		printf("All OK\n");
 
 	if (!quiet) {
 		printf("\n");
@@ -172,7 +168,7 @@ void test_substr_all(uint8_t quiet) {
 		test_substr(str, 1, 10, "(null)");
 		test_substr(str, -10, 0, "(null)");
 		test_substr(str, -10, 12, "(null)");
-		test_substr(str, -7, 3, "ABCDEF");
+		test_substr(str, -7, 3, "(null)");
 	}
 
 	// NOTE: length is unsigned and can never be less than 0, so don't test for it

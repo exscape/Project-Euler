@@ -288,7 +288,7 @@ uint64_t gmp_digital_sum(const mpz_t in_num) {
 /*
  * str: the string to work on
  * start: the starting offset (0 for the first position, 1 for the second etc.; negative offsets count from the end of the string, -1 being the last)
- * length: the length to extract. 0 extracts the remainder of the string.
+ * length: the length to extract. 0 extracts the remainder of the string; negative lengths stop at n characters from the end.
  */
 char *substr(const char *str, int start, int length) {
 	if (str == NULL)
@@ -305,13 +305,16 @@ char *substr(const char *str, int start, int length) {
 	}
 
 	if (length == 0) {
-		length = str_length - start;
+		length = str_length - start; /* simple enough, the length is from the staring point to the end */
 	}
 	else if (length < 0) {
-		length = str_length - (-length);
+		length = str_length - (-length) - start; /* a bit more complicated; we need to subtract (the negated) length here, too */
 	}
 
-	assert(start >= 0 && length >= 0); // XXX: debug
+	// Ugly, but we *need* the caller to be able to free() any return value from this function
+	if (length < 0) {
+		return strdup("");
+	}
 
 	// Make sure we stay within the bounds of "str"
 	if (start+length > str_length || str <= ( (char *) ( (unsigned long)start + (unsigned long)length ) )) { // XXX: OBOE?
