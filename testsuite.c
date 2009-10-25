@@ -99,19 +99,32 @@ void test_substr_all() {
 	char *str = "ABCDEF";
 
 	printf("Positive start tests:\n");
-	test_substr(str, 0, 0, "ABCDEF");
-	test_substr(str, 1, 0, "BCDEF");
+	test_substr(str, 0, 6, "ABCDEF");
+	test_substr(str, 1, 5, "BCDEF");
 	test_substr(str, 0, 3, "ABC");
-	test_substr(str, 4, 0, "EF");
-	test_substr(str, 5, 0, "F");
+	test_substr(str, 4, 2, "EF");
+	test_substr(str, 5, 1, "F");
 	test_substr(str, 3, 2, "DE");
 
 	printf("\n");
 	printf("Negative start tests:\n");
-	test_substr(str, -1, 0, "F");
 	test_substr(str, -3, 1, "D");
-	test_substr(str, -4, 0, "CDEF");
 	test_substr(str, -4, 3, "CDE");
+	test_substr(str, -4, 1, "C");
+	test_substr(str, -5, 1, "B");
+	test_substr(str, -6, 6, "ABCDEF");
+
+//	printf("\n");
+//	printf("Zero length tests:\n");
+//	test_substr(str, 0, 0, "ABCDEF");
+//	test_substr(str, 1, 0, "BCDEF");
+//	test_substr(str, 4, 0, "EF");
+//	test_substr(str, 5, 0, "F");
+	
+//	printf("\n");
+//	printf("Zero length AND negative start tests:\n");
+//	test_substr(str, -1, 0, "F");
+//	test_substr(str, -4, 0, "CDEF");
 
 	printf("\n");
 	printf("The following should fail:\n");

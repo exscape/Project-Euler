@@ -288,29 +288,42 @@ uint64_t gmp_digital_sum(const mpz_t in_num) {
 /*
  * str: the string to work on
  * start: the starting offset (0 for the first position, 1 for the second etc.)
- * length: the length to extract. 0 extract to the rest of the string.
+ * length: the length to extract. XXX: 0 extracts to the rest of the string.
  */
-char *substr(const char *str, uint32_t start, uint32_t length) {
-	/* TODO/FIXME/XXX: Add support for a negative start */
+char *substr(const char *str, int start, uint32_t length) {
+	// XXX: Fix support for 0 = automatic length
 	if (str == NULL)
 		return NULL;
-	uint32_t str_length = strlen(str);
+	const uint32_t str_length = strlen(str);
+	int orig_start = start; /* used for negative start values */
+
+	if (start < 0) {
+		if (-start > str_length) { // for a 5-char string, -5 <= start <= 5 must be true; the second part is checked below
+			return NULL;
+		}
+//		start = str_length - length - 1;
+		start = str_length - (-start);
+	}
 
 	if (start+length > str_length) { // XXX: Off by one error?
-		fprintf(stderr, "Warning: attempted to access outside string boundary in substr()\n");
+//		fprintf(stderr, "Warning: attempted to access outside string boundary in substr()\n");
 		return NULL;
 	}
 
-	if (length == 0) {
+/*	if (length == 0) {
 		length = str_length - start; // XXX: Off by one error?
+		if (orig_start < 0)
+			start -= length; // Fix start for start = -x && length == 0 (the above would only do start = len - 0 == start)
 	}
-
+*/
 	char *out = malloc(length + 1); // XXX: Off by one error?
 	if (out == NULL)
 		return NULL;
+	memset(out, 0, length + 1);
 
 	char *p = out;
 	for (uint32_t i = start; i < start+length; i++) {
+		assert (p < out+length); // XXX: debug; off by one error?
 		*p++ = str[i];
 	}
 
