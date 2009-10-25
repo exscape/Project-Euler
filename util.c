@@ -311,9 +311,9 @@ char *substr(const char *str, int start, int length) {
 		length = str_length - (-length) - start; /* a bit more complicated; we need to subtract (the negated) length here, too */
 	}
 
-	// Ugly, but we *need* the caller to be able to free() any return value from this function
+	/* If length is less than 0 even after the changes, call it quits. */
 	if (length < 0) {
-		return strdup("");
+		return NULL;
 	}
 
 	// Make sure we stay within the bounds of "str"

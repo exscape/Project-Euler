@@ -108,6 +108,7 @@ void test_substr_all(uint8_t quiet) {
 	errcount += test_substr(str, 5, 1, "F");
 	errcount += test_substr(str, 3, 2, "DE");
 	errcount += test_substr("Hello, world!", 1, 4, "ello");
+	errcount += test_substr("1 2 3, anyone there?", 2, 1, "2");
 	if (!quiet && errcount == 0)
 		printf("All OK\n");
 
@@ -132,7 +133,6 @@ void test_substr_all(uint8_t quiet) {
 	errcount += test_substr(str, 1, 0, "BCDEF");
 	errcount += test_substr(str, 4, 0, "EF");
 	errcount += test_substr(str, 5, 0, "F");
-	errcount += test_substr("1 2 3, anyone there?", 2, 1, "2");
 	errcount += test_substr("", 0, 0, "");
 	if (!quiet && errcount == 0)
 		printf("All OK\n");
@@ -156,7 +156,6 @@ void test_substr_all(uint8_t quiet) {
 	errcount += test_substr(str, 0, -4, "AB");
 	errcount += test_substr(str, 2, -1, "CDE");
 	errcount += test_substr(str, -3, -1, "DE");
-	errcount += test_substr(str, 4, -4, "");
 	errcount += test_substr(str, 4, -1, "E");
 	if (!quiet && errcount == 0)
 		printf("All OK\n");
@@ -169,6 +168,9 @@ void test_substr_all(uint8_t quiet) {
 		test_substr(str, -10, 0, "(null)");
 		test_substr(str, -10, 12, "(null)");
 		test_substr(str, -7, 3, "(null)");
+		test_substr(str, 0, -7, "(null)");
+		test_substr(str, -3, -4, "(null)");
+		test_substr(str, 4, -4, "(null)"); /* this would return "" in PHP, but screw that. */
 	}
 
 	// NOTE: length is unsigned and can never be less than 0, so don't test for it
@@ -177,11 +179,11 @@ void test_substr_all(uint8_t quiet) {
 }
 
 int main() {
-	//test_get_digit();
-	//test_get_digit_rev();
-	//test_get_length();
-	//test_is_pandigital();
-	//test_is_anagram();
+	test_get_digit();
+	test_get_digit_rev();
+	test_get_length();
+	test_is_pandigital();
+	test_is_anagram();
 	test_substr_all(0); // 1 = quiet mode on
 
 	return 0;
