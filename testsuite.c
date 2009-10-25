@@ -157,6 +157,7 @@ void test_substr_all(uint8_t quiet) {
 	errcount += test_substr(str, 2, -1, "CDE");
 	errcount += test_substr(str, -3, -1, "DE");
 	errcount += test_substr(str, 4, -1, "E");
+	errcount += test_substr(str, 0, -6, "");
 	if (!quiet && errcount == 0)
 		printf("All OK\n");
 

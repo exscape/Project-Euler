@@ -312,7 +312,7 @@ char *substr(const char *str, int start, int length) {
 	}
 
 	/* If length is less than 0 even after the changes, call it quits. */
-	if (length < 0) {
+	if (length < 0) { /* length == 0 returns "" */
 		return NULL;
 	}
 
