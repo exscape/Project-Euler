@@ -5,7 +5,7 @@
 #include <gmp.h>
 #include "util.c"
 
-/* Written: 2009-10-25, some file IO copied from problem 8 */
+/* Written: 2009-10-25 */
 
 #define DATAFILE "data/problem_13"
 
