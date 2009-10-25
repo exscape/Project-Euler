@@ -89,17 +89,18 @@ uint8_t /* num_errors */ test_substr(const char *str, int start, int length, con
 		return 1;
 	}
 	else {
-		fprintf(stderr, "PASS in substr(\"%s\", %d, %d): got \"%s\", expected \"%s\"\n", str, start, length, sub, expect);
+//		fprintf(stderr, "PASS in substr(\"%s\", %d, %d): got \"%s\", expected \"%s\"\n", str, start, length, sub, expect);
 		free(sub);
 		return 0;
 	}
 }
 
-void test_substr_all() {
+void test_substr_all(uint8_t quiet) {
 	uint64_t errcount = 0;
 	char *str = "ABCDEF";
 
-	printf("Positive start tests:\n");
+	if (!quiet)
+		printf("Positive start tests:\n");
 	errcount += test_substr(str, 0, 6, "ABCDEF");
 	errcount += test_substr(str, 1, 5, "BCDEF");
 	errcount += test_substr(str, 0, 3, "ABC");
@@ -107,51 +108,67 @@ void test_substr_all() {
 	errcount += test_substr(str, 5, 1, "F");
 	errcount += test_substr(str, 3, 2, "DE");
 	errcount += test_substr("Hello, world!", 1, 4, "ello");
+	if (!quiet && errcount == 0)
+		printf("All OK\n");
 
-	printf("\n");
-	printf("Negative start tests:\n");
+	if (!quiet) {
+		printf("\n");
+		printf("Negative start tests:\n");
+	}
 	errcount += test_substr(str, -3, 1, "D");
 	errcount += test_substr(str, -4, 3, "CDE");
 	errcount += test_substr(str, -4, 1, "C");
 	errcount += test_substr(str, -5, 1, "B");
 	errcount += test_substr(str, -6, 6, "ABCDEF");
 	errcount += test_substr("Testing, testing", -7, 4, "test");
+	if (!quiet && errcount == 0)
+		printf("All OK\n");
 
-	printf("\n");
-	printf("Zero length tests:\n");
+	if (!quiet) {
+		printf("\n");
+		printf("Zero length tests:\n");
+	}
 	errcount += test_substr(str, 0, 0, "ABCDEF");
 	errcount += test_substr(str, 1, 0, "BCDEF");
 	errcount += test_substr(str, 4, 0, "EF");
 	errcount += test_substr(str, 5, 0, "F");
 	errcount += test_substr("1 2 3, anyone there?", 2, 1, "2");
 	errcount += test_substr("", 0, 0, "");
+	if (!quiet && errcount == 0)
+		printf("All OK\n");
 
-	printf("\n");
-	printf("Zero length AND negative start tests:\n");
+	if (!quiet) {
+		printf("\n");
+		printf("Zero length AND negative start tests:\n");
+	}
 	errcount += test_substr(str, -1, 0, "F");
 	errcount += test_substr(str, -4, 0, "CDEF");
 	errcount += test_substr(str, -2, 0, "EF");
+	if (!quiet && errcount == 0)
+		printf("All OK\n");
 
-	printf("\n");
-	printf("The following should fail:\n");
-	test_substr(str, 6, 2, "(null)");
-	test_substr(str, 1, 10, "(null)");
-	test_substr(str, -10, 0, "(null)");
-	test_substr(str, -10, 12, "(null)");
-	test_substr(str, -7, 3, "ABCDEF");
+	if (!quiet) {
+		printf("\n");
+		printf("The following should fail:\n");
+		test_substr(str, 6, 2, "(null)");
+		test_substr(str, 1, 10, "(null)");
+		test_substr(str, -10, 0, "(null)");
+		test_substr(str, -10, 12, "(null)");
+		test_substr(str, -7, 3, "ABCDEF");
+	}
+
 	// NOTE: length is unsigned and can never be less than 0, so don't test for it
 	
 	printf("Done testing substr(), %lu errors\n", errcount);
 }
 
 int main() {
-	//test_get_digit();
-	//test_get_digit_rev();
-	//test_get_length();
-	//test_is_pandigital();
-	//test_is_anagram();
-	
-	test_substr_all();
+	test_get_digit();
+	test_get_digit_rev();
+	test_get_length();
+	test_is_pandigital();
+	test_is_anagram();
+	test_substr_all(1); // 1 = quiet mode on
 
 	return 0;
 }
