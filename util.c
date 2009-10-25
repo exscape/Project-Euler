@@ -334,3 +334,5 @@ char *substr(const char *str, int start, int length) {
 
 	return out;
 }
+
+// TODO: gmp_get_digit()?
