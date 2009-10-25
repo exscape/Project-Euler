@@ -7,6 +7,7 @@ a.out
 
 !*.c
 !*.h
+!data/*
 
 gmptest.c
 testsuite
