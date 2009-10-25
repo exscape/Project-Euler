@@ -13,7 +13,7 @@ int main() {
 
 	mpz_ui_pow_ui(num, 2, 1000);
 
-	printf("Answer: %llu\n", gmp_digital_sum(num));
+	printf("Answer: %lu\n", gmp_digital_sum(num));
 	mpz_clear(num);
 	return 0;
 }

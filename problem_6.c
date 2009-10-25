@@ -18,6 +18,6 @@ int main() {
 	}
 	sq_sum *= sq_sum;
 
-	printf("Answer: %llu\n", sq_sum-sum_sq);
+	printf("Answer: %lu\n", sq_sum-sum_sq);
 	return 0;
 }

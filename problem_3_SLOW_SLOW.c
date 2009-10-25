@@ -53,7 +53,7 @@ uint64_t *get_prime_factors(uint64_t n) {
 int main() {
 	uint64_t *arr = get_prime_factors(NUM);;
 	for (uint64_t i = 0; arr[i] != 0; i++) {
-		printf("Prime factor: %llu\n", arr[i]);
+		printf("Prime factor: %lu\n", arr[i]);
 	}
 
 	printf("Move get_divisors to util.c\n");

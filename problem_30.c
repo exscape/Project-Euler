@@ -22,12 +22,12 @@ int main() {
 		}
 
 		if (digitalsum == i && digitalsum > 9) { // One-digit numbers aren't sums
-			printf("Found %llu\n", digitalsum);
+			printf("Found %lu\n", digitalsum);
 			grand_total += digitalsum;
 		}
 	}
 
-	printf("Answer: %llu\n", grand_total);
+	printf("Answer: %lu\n", grand_total);
 	
 	return 0;
 }

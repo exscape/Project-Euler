@@ -13,7 +13,7 @@ void test_get_digit() {
 	
 	  for (uint64_t num = 1000000; num >= 1; num--) {
 	//for (uint64_t num = 1; num <= 100000; num++) {
-		sprintf(orig, "%llu", num);
+		sprintf(orig, "%lu", num);
 		memset(copy, 0, 21); // Zero the copy, since the algorithm below doesn't NULL terminate
 		for (uint8_t curdig=1; curdig <= (uint8_t)log10(num)+1; curdig++)  {
 			*(copy+curdig-1) = get_digit(num, curdig) + 0x30;
@@ -24,7 +24,7 @@ void test_get_digit() {
 			errcount++;
 		}
 	}
-	printf("Done testing get_digit(), %llu errors\n", errcount);
+	printf("Done testing get_digit(), %lu errors\n", errcount);
 }
 
 // Tests that get_digit_rev() returns the correct value
@@ -35,7 +35,7 @@ void test_get_digit_rev() {
 	char *rev; /* pointer to the reversed string */
 	
 	  for (uint64_t num = 1000000; num >= 1; num--) {
-		sprintf(orig, "%llu", num);
+		sprintf(orig, "%lu", num);
 		memset(copy, 0, 21); // Zero the copy, since the algorithm below doesn't NULL terminate
 		for (uint8_t curdig=1; curdig <= (uint8_t)log10(num)+1; curdig++)  {
 			*(copy+curdig-1) = get_digit_rev(num, curdig) + 0x30;
@@ -49,7 +49,7 @@ void test_get_digit_rev() {
 		}
 		free(rev);
 	}
-	printf("Done testing get_digit_rev(), %llu errors\n", errcount);
+	printf("Done testing get_digit_rev(), %lu errors\n", errcount);
 }
 
 // Tests that get_length() returns the correct value
@@ -63,7 +63,7 @@ void test_get_length() {
 			errcount++;
 		}
 	}
-	printf("Done testing get_length(), %llu errors\n", errcount);
+	printf("Done testing get_length(), %lu errors\n", errcount);
 }
 
 void test_is_anagram() {
@@ -73,7 +73,7 @@ void test_is_anagram() {
 void test_is_pandigital() {
 //	uint64_t errcount = 0;
 	printf("Implement test_is_pandigital()!\n");
-//	printf("Done testing is_pandigital, %llu errors\n", errcount);
+//	printf("Done testing is_pandigital, %lu errors\n", errcount);
 }
 
 uint8_t /* bool */ test_substr(const char *str, int start, int length, const char *expect) {

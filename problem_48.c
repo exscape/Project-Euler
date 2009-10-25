@@ -19,7 +19,7 @@ int main() {
 		mpz_add(sum, sum, n);
 	}
 
-	gmp_printf("Answer: %llu\n", mpz_fdiv_ui(sum, int_pow(10, 10)));
+	gmp_printf("Answer: %lu\n", mpz_fdiv_ui(sum, int_pow(10, 10)));
 
 	mpz_clear(sum);
 	mpz_clear(n);

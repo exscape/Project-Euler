@@ -15,6 +15,6 @@ int main() {
 		else if (tmp > 4000000)
 			break;
 	}
-	printf("Answer: %llu\n", sum);
+	printf("Answer: %lu\n", sum);
 	return 0;
 }

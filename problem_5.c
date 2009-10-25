@@ -17,6 +17,6 @@ int main() {
 			break;
 	}
 
-	printf("Answer: %llu\n", num);
+	printf("Answer: %lu\n", num);
 	return 0;
 }

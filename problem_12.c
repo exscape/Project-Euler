@@ -11,7 +11,7 @@ int main() {
 	for (uint64_t i=1;; i++) {
 		n += i;
 		if (num_divisors(n) > 500) {
-			printf("Answer: %llu\n", n);
+			printf("Answer: %lu\n", n);
 			return 0;
 		}
 	}

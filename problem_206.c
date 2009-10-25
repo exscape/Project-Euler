@@ -20,7 +20,7 @@ register uint64_t n, sq;
 			continue; 	   // It cuts execution time from 1m 48.5s to 10.5s.
 		if (gd(sq, 1) == 1 && gd(sq, 3) == 2 && gd(sq, 5) == 3 && gd(sq, 7) == 4 && gd(sq, 9) == 5 && gd(sq, 11) == 6 && gd(sq, 13) == 7 && gd(sq, 15) == 8 && gd(sq, 17) == 9)
 		{
-			printf("Answer: %llu (square: %llu)\n", n, sq);
+			printf("Answer: %lu (square: %lu)\n", n, sq);
 			return 0;
 		}
 	}

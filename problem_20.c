@@ -14,7 +14,7 @@ int main() {
 		mpz_mul_ui(num, num, i);
 	}
 
-	printf("Answer: %llu", gmp_digital_sum(num));
+	printf("Answer: %lu", gmp_digital_sum(num));
 
 	mpz_clear(num);
 	return 0;

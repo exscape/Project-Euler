@@ -13,7 +13,7 @@ int main() {
 #define START 7654321
 	for (uint32_t i = START; i > 0 && i <= START; i-=2) { /* detect underflow w/ i <= START */
 		if (is_pandigital(i) && isprime(i)) {
-			printf("Answer: %llu\n", i);
+			printf("Answer: %lu\n", i);
 			break;
 		}
 	}

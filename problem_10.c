@@ -16,6 +16,6 @@ int main() {
 			sum += i;
 	}
 
-	printf("Answer: %llu\n", sum);
+	printf("Answer: %lu\n", sum);
 	return 0;
 }

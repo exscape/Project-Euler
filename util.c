@@ -174,7 +174,7 @@ uint8_t get_length_old(uint64_t num) {
 uint8_t get_digit_rev(uint64_t num, uint8_t digit) {
 	assert(digit <= 19 && digit != 0);
 	if (digit > get_length(num)) {
-		fprintf(stderr, "Error: Tried to get digit %hhu out of the number %llu!\n", digit, num);
+		fprintf(stderr, "Error: Tried to get digit %hhu out of the number %lu!\n", digit, num);
 		exit(1);
 	}
 	return ( (num % int_pow(10,digit)) / (int_pow(10,digit)/10) );
@@ -191,7 +191,7 @@ uint8_t get_digit_rev(uint64_t num, uint8_t digit) {
 
 	// Check that the digit exists
 	if (log_value+1 < digit) {
-		fprintf(stderr, "Error: Tried to get digit #%hhu out of the number %llu!\n", digit, num);
+		fprintf(stderr, "Error: Tried to get digit #%hhu out of the number %lu!\n", digit, num);
 		exit(1);
 	}
 	digit = log_value - digit + 2; // Black magic. XXX: Understand your own creation!

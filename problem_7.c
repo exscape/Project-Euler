@@ -18,6 +18,6 @@ int main() {
 			break;
 	}
 
-	printf("Answer: %llu\n", i);
+	printf("Answer: %lu\n", i);
 	return 0;
 }
