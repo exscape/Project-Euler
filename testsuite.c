@@ -66,14 +66,33 @@ void test_get_length() {
 	printf("Done testing get_length(), %lu errors\n", errcount);
 }
 
+// Tests that gmp_get_length() returns the correct value
+void test_gmp_get_length() {
+	uint64_t errcount = 0;
+	mpz_t i;
+	mpz_init_set_ui(i, 0);
+	char *str;
+	while (mpz_cmp_ui(i, 1000000) <= 0) {
+		gmp_asprintf(&str, "%Zd", i);
+		if (gmp_get_length(i) != strlen(str)) {
+			gmp_printf("gmp_get_length error at %Zd (gmp_get_length says %lu, actual length %zu\n", i, gmp_get_length(i), strlen(str));
+			errcount++;
+		}
+		free(str);
+
+		mpz_add_ui(i, i, 1);
+	}
+	mpz_clear(i);
+
+	printf("Done testing gmp_get_length(), %lu errors\n", errcount);
+}
+
 void test_is_anagram() {
-	printf("Implement test_is_anagram()!\n");
+	printf("Implement test_is_anagram()!\n"); // FIXME
 }
 
 void test_is_pandigital() {
-//	uint64_t errcount = 0;
-	printf("Implement test_is_pandigital()!\n");
-//	printf("Done testing is_pandigital, %lu errors\n", errcount);
+	printf("Implement test_is_pandigital()!\n"); // FIXME
 }
 
 uint8_t /* num_errors */ test_substr(const char *str, int start, int length, const char *expect) {
@@ -186,6 +205,6 @@ int main() {
 	test_is_pandigital();
 	test_is_anagram();
 	test_substr_all(0); // 1 = quiet mode on
-
+	test_gmp_get_length();
 	return 0;
 }

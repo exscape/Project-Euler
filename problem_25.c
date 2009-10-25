@@ -9,19 +9,15 @@
 /* Written: 2009-10-25 */
 
 int main() {
-	mpz_t *f;
 	for (uint64_t i=1;; i++) {
-		f = gmp_fib(i);
+		mpz_t *f = gmp_fib(i);
 
-		char *str;
-		gmp_asprintf(&str, "%Zd", *f);
-		if (strlen(str) >= 1000) {
+		if (gmp_get_length(*f) >= 1000) {
 			gmp_printf("Answer: fib(%lu) = %Zd\n", i, *f);
-			break;
+			mpz_clear(*f);
+			return 0;
 		}
-		mpz_clear(*f);
 	}
 
-	mpz_clear(*f);
 	return 0;
 }

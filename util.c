@@ -361,4 +361,25 @@ mpz_t *gmp_fib(uint64_t n) {
 	return f_1;
 }
 
+/*
+ * num: the GMP integer to check
+ * return value: the number of digits in the number
+ */
+uint64_t gmp_get_length(mpz_t num) {
+	if (mpz_cmp_ui(num, 0) == 0)  // Number equals 0; 1 digit
+		return 1;
+	uint64_t digits = 0;
+	mpz_t i;
+	mpz_init_set_ui(i, 1);
+
+	while (mpz_cmp(i, num) <= 0) {
+		mpz_mul_ui(i, i, 10);
+		digits++;
+	}
+
+	mpz_clear(i);
+
+	return digits;
+}
+
 // TODO: gmp_get_digit()?
