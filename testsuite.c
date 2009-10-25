@@ -57,9 +57,9 @@ void test_get_length() {
 	uint64_t errcount = 0;
 	char buf[21];
 	for (uint32_t i = 0; i <= 10000000; i++) {
-		sprintf(buf, "%lu", i);
+		sprintf(buf, "%u", i);
 		if (get_length(i) != strlen(buf)) {
-			printf("get_length() error at %lu (get_length() says %hhu, actual length %zu)\n", i, get_length(i), strlen(buf));
+			printf("get_length() error at %u (get_length() says %hhu, actual length %zu)\n", i, get_length(i), strlen(buf));
 			errcount++;
 		}
 	}
