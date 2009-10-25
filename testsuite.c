@@ -76,55 +76,61 @@ void test_is_pandigital() {
 //	printf("Done testing is_pandigital, %lu errors\n", errcount);
 }
 
-uint8_t /* bool */ test_substr(const char *str, int start, int length, const char *expect) {
+uint8_t /* num_errors */ test_substr(const char *str, int start, int length, const char *expect) {
 	char *sub = substr(str, start, length);
 	if (sub == NULL) {
 		fprintf(stderr, "*FAIL* in substr(\"%s\", %d, %d): got NULL!\n", str, start, length);
-		return 0;
+		return 1;
 	}
 
 	if (strcmp(sub, expect) != 0) {
 		fprintf(stderr, "*FAIL* in substr(\"%s\", %d, %d): got \"%s\", expected \"%s\"\n", str, start, length, sub, expect);
 		free(sub);
-		return 0;
+		return 1;
 	}
 	else {
 		fprintf(stderr, "PASS in substr(\"%s\", %d, %d): got \"%s\", expected \"%s\"\n", str, start, length, sub, expect);
 		free(sub);
-		return 1;
+		return 0;
 	}
 }
 
 void test_substr_all() {
+	uint64_t errcount = 0;
 	char *str = "ABCDEF";
 
 	printf("Positive start tests:\n");
-	test_substr(str, 0, 6, "ABCDEF");
-	test_substr(str, 1, 5, "BCDEF");
-	test_substr(str, 0, 3, "ABC");
-	test_substr(str, 4, 2, "EF");
-	test_substr(str, 5, 1, "F");
-	test_substr(str, 3, 2, "DE");
+	errcount += test_substr(str, 0, 6, "ABCDEF");
+	errcount += test_substr(str, 1, 5, "BCDEF");
+	errcount += test_substr(str, 0, 3, "ABC");
+	errcount += test_substr(str, 4, 2, "EF");
+	errcount += test_substr(str, 5, 1, "F");
+	errcount += test_substr(str, 3, 2, "DE");
+	errcount += test_substr("Hello, world!", 1, 4, "ello");
 
 	printf("\n");
 	printf("Negative start tests:\n");
-	test_substr(str, -3, 1, "D");
-	test_substr(str, -4, 3, "CDE");
-	test_substr(str, -4, 1, "C");
-	test_substr(str, -5, 1, "B");
-	test_substr(str, -6, 6, "ABCDEF");
+	errcount += test_substr(str, -3, 1, "D");
+	errcount += test_substr(str, -4, 3, "CDE");
+	errcount += test_substr(str, -4, 1, "C");
+	errcount += test_substr(str, -5, 1, "B");
+	errcount += test_substr(str, -6, 6, "ABCDEF");
+	errcount += test_substr("Testing, testing", -7, 4, "test");
 
-//	printf("\n");
-//	printf("Zero length tests:\n");
-//	test_substr(str, 0, 0, "ABCDEF");
-//	test_substr(str, 1, 0, "BCDEF");
-//	test_substr(str, 4, 0, "EF");
-//	test_substr(str, 5, 0, "F");
-	
-//	printf("\n");
-//	printf("Zero length AND negative start tests:\n");
-//	test_substr(str, -1, 0, "F");
-//	test_substr(str, -4, 0, "CDEF");
+	printf("\n");
+	printf("Zero length tests:\n");
+	errcount += test_substr(str, 0, 0, "ABCDEF");
+	errcount += test_substr(str, 1, 0, "BCDEF");
+	errcount += test_substr(str, 4, 0, "EF");
+	errcount += test_substr(str, 5, 0, "F");
+	errcount += test_substr("1 2 3, anyone there?", 2, 1, "2");
+	errcount += test_substr("", 0, 0, "");
+
+	printf("\n");
+	printf("Zero length AND negative start tests:\n");
+	errcount += test_substr(str, -1, 0, "F");
+	errcount += test_substr(str, -4, 0, "CDEF");
+	errcount += test_substr(str, -2, 0, "EF");
 
 	printf("\n");
 	printf("The following should fail:\n");
@@ -132,6 +138,10 @@ void test_substr_all() {
 	test_substr(str, 1, 10, "(null)");
 	test_substr(str, -10, 0, "(null)");
 	test_substr(str, -10, 12, "(null)");
+	test_substr(str, -7, 3, "ABCDEF");
+	// NOTE: length is unsigned and can never be less than 0, so don't test for it
+	
+	printf("Done testing substr(), %lu errors\n", errcount);
 }
 
 int main() {

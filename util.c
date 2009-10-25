@@ -287,23 +287,28 @@ uint64_t gmp_digital_sum(const mpz_t in_num) {
 
 /*
  * str: the string to work on
- * start: the starting offset (0 for the first position, 1 for the second etc.)
- * length: the length to extract. FIXME: 0 DOES NOT extract the remainder of the string.
+ * start: the starting offset (0 for the first position, 1 for the second etc.; negative offsets count from the end of the string, -1 being the last)
+ * length: the length to extract. 0 extracts the remainder of the string.
  */
 char *substr(const char *str, int start, uint32_t length) {
-	// XXX: Fix support for 0 = automatic length
 	if (str == NULL)
 		return NULL;
 	const uint32_t str_length = strlen(str);
-//	int orig_start = start; /* used for negative start values */
 
+	// Calculate the starting position for negative start values
 	if (start < 0) {
 		if (-start > str_length) { // for a 5-char string, -5 <= start <= 5 must be true; the second part is checked below
 			return NULL;
 		}
-		start = str_length - (-start);
+		start = str_length - (-start); /* describes itself. we start at str_length minus the negated start value.
+										  start = str_length + start should do the same, but is less clear. */
 	}
 
+	if (length == 0) {
+		length = str_length - start;
+	}
+
+	// Make sure we stay within the bounds of "str"
 	if (start+length > str_length) {
 		return NULL;
 	}
@@ -315,7 +320,6 @@ char *substr(const char *str, int start, uint32_t length) {
 
 	char *p = out;
 	for (uint32_t i = start; i < start+length; i++) {
-		assert (p <= out + (length - 1)); // XXX: debug
 		*p++ = str[i];
 	}
 
