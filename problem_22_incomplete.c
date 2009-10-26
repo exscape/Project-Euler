@@ -52,24 +52,51 @@ int main() {
 	}
 	printf("%hu names in file\n", num_elements);
 
-	char **arr = malloc(num_elements * sizeof(char *));
+	char **arr = malloc((num_elements) * sizeof(char *));
 
 	for (uint32_t i = 0; i < num_elements; i++) {
-		arr[i] = malloc(33); // XXX: Don't just make up a number!
+		arr[i] = malloc(16); // XXX: Don't just make up a number!
 		if (arr[i] == NULL) {
 			fprintf(stderr, "malloc() loop failed at element %u!\n", i);
 			exit(1);
 		}
+		memset(arr[i], 0, 16);
 	}
 
-	// XXX: read in the names into the array
+	uint32_t i = 0;
+	uint8_t in_string = 0;
+	char *buf_p = buf;
+	for (char *cur_str = arr[0]; i < num_elements; cur_str = arr[++i]) {
+		for (char *p = cur_str; buf_p <= buf+strlen(buf); buf_p++ /* [sic!] */) {
+			if (*buf_p == '"') {
+				in_string = 1;
+				continue;
+			}
+			if (*buf_p == ',') {
+				*p = 0;
+				in_string = 0;
+				buf_p++; // skip to the next name
+				break;
+			}
+			if (in_string)
+				*p++ = *buf_p;
+		}
+	}
+		
+	for (uint32_t i = 0; i < num_elements; i++) {
+		printf("%s\n", arr[i]);
+	}
 
+	free(buf); buf = NULL; buf_p = NULL;
+
+	// XXX: Sort names, etc.
+
+	/* Cleanup */
 	for (uint32_t i = 0; i < num_elements; i++) {
 		free(arr[i]);
 		arr[i] = NULL;
 	}
 
 	free(arr); arr = NULL;
-	free(buf); buf = NULL;
 	return 0;
 }
