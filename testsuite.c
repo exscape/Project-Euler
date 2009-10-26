@@ -108,7 +108,8 @@ uint8_t /* num_errors */ test_substr(const char *str, int start, int length, con
 		return 1;
 	}
 	else {
-		fprintf(stderr, "PASS in substr(\"%s\", %d, %d): got \"%s\", expected \"%s\"\n", str, start, length, sub, expect);
+		// FIXME: Quiet mode should be passed here, too, or be a global (ugh)
+//		fprintf(stderr, "PASS in substr(\"%s\", %d, %d): got \"%s\", expected \"%s\"\n", str, start, length, sub, expect);
 		free(sub);
 		return 0;
 	}
@@ -198,13 +199,33 @@ void test_substr_all(uint8_t quiet) {
 	printf("Done testing substr(), %lu errors\n", errcount);
 }
 
+void test_int_pow() {
+	uint64_t errcount = 0;
+	uint64_t res, d_res;
+	// XXX: We can't test any further due to (uint64_t)pow() returning incorrect values, presumably due to
+	// lack of precision. int_pow() works up to 10^19 as confirmed by checking the 4 erroneous values
+	// manually.
+	for (uint64_t base = 0; base<=8; base++) {
+		for (uint64_t exp = 0; exp <= 18; exp++) {
+			res = int_pow(base, exp);
+			d_res = (uint64_t) pow(base, exp);
+			if (res != d_res) {
+				printf("int_pow() error at %lu^%lu - expected %lu, got %lu\n", base, exp, d_res, res);
+				errcount++;
+			}
+		}
+	}
+	printf("Done testing int_pow(), %lu errors\n", errcount);
+}
+
 int main() {
+	test_int_pow();
 	test_get_digit();
 	test_get_digit_rev();
 	test_get_length();
 	test_is_pandigital();
 	test_is_anagram();
-	test_substr_all(0); // 1 = quiet mode on
+	test_substr_all(1); // 1 = quiet mode on
 	test_gmp_get_length();
 	return 0;
 }

@@ -135,6 +135,10 @@ uint8_t is_palindrome(uint64_t n) {
  * return value: base^exp
  */
 uint64_t int_pow(const uint64_t base, uint64_t exp) {
+	if (base == 1 || exp == 0) /* 1^x is always 1, even for x = 0; 0^0 = 1 but all other 0^x = 0 (handled below) */
+		return 1;
+	else if (base == 0)
+		return 0;
 	// 10^20 > 2^64 (not sure how to check for other cases, like 9^1000, though...)
 	assert ( ! (base == 10 && exp >= 20) ); /* XXX: is this correct? (NOT makes my head hurt) */
 	uint64_t result = base;
