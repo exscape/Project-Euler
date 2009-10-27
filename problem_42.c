@@ -19,7 +19,7 @@ int main() {
 	fseek(f, 0, SEEK_END);
 	uint32_t bufsize = ftell(f);
 	rewind(f);
-	if (bufsize == 1)
+	if (bufsize == -1)
 		exit(1);
 
 	char *buf = malloc(bufsize + 1);
