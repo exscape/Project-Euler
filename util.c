@@ -412,4 +412,21 @@ void sort_char_array(char **arr, const uint32_t num_elements) {
 	} while (swapped);
 }
 
+/*
+ * n: the number to check
+ * return value: 1 for a triangle number, otherwise 0
+ * notes: Probably quite slow.
+ */
+uint8_t is_triangle(uint64_t n) {
+	for (uint64_t i=1; i <= n; i++) {
+		uint64_t tri = 0.5*i*(i+1);
+		if (n == tri)
+			return 1;
+		if (tri > n)
+			return 0;
+	}
+	assert(0); /* Never reached, hopefully */
+	return 0;
+}
+
 // TODO: gmp_get_digit()?
