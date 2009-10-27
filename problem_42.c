@@ -77,6 +77,7 @@ int main() {
 	/* we're done with the buffer now */
 	free(buf); buf = NULL; buf_p = NULL;
 
+	/* calculate the "value" of each word, and check if the value is a triangle number */
 	uint16_t triangle_words = 0;
 	for (int i=0; i < num_elements; i++) {
 		uint64_t value = 0;
@@ -97,7 +98,6 @@ int main() {
 	}
 
 	free(arr); arr = NULL;
-	free(values); values = NULL;
 
 	return 0;
 }
