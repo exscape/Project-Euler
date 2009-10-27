@@ -4,10 +4,10 @@
 #include <stdint.h>
 #include "util.c"
 
-/* Written: 2009-10-27, XXX */
+/* Written: 2009-10-27 */
 
 uint32_t fac[] = {
-	0,
+	1,
 	1,
 	2,
 	2*3,
@@ -21,17 +21,20 @@ uint32_t fac[] = {
 
 int main() {
 	uint64_t grand_sum = 0, sum = 0;
-	for (uint64_t i = 3;; i++) {
+	uint64_t n;
+	for (uint64_t i = 3; i < 10000000; i++) { // XXX: Learn about the reason for this upper bound
 		sum = 0;
-		for (uint8_t j = 1; j <= get_length(i); j++) {
-			sum += fac[get_digit(i, j)];
+		n = i;
+		while (n != 0) {
+			sum += fac[n % 10];
+			n /= 10;
 		}
+
 		if (sum > 2 && sum == i) {
 			grand_sum += sum;
-			printf("Found %lu, grand sum = %lu\n", sum, grand_sum);
 		}
-	if (i % 1000000 == 0)
-		printf("i = %lu\n", i);
 	}
+
+	printf("Answer: %lu\n", grand_sum);
 	return 0;
 }
