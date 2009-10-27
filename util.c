@@ -429,4 +429,38 @@ uint8_t is_triangle(uint64_t n) {
 	return 0;
 }
 
+/*
+ * n: the number to check
+ * return value: 1 for a pentagonal number, otherwise 0
+ * notes: Probably quite slow.
+ */
+uint8_t is_pentagonal(uint64_t n) {
+	for (uint64_t i = 1; i <= n; i++) {
+		uint64_t pent = (i*(3*i-1))/2;
+		if (n == pent)
+			return 1;
+		if (pent > n)
+			return 0;
+	}
+	assert(0); /* Hopefully not reached */
+	return 0;
+}
+
+/*
+ * n: the number to check
+ * return value: 1 for a hexagonal number, otherwise 0
+ * notes: Probably quite slow.
+ */
+uint8_t is_hexagonal(uint64_t n) {
+	for (uint64_t i = 1; i <= n; i++) {
+		uint64_t hex = i*(2*i-1);
+		if (n == hex)
+			return 1;
+		if (hex > n)
+			return 0;
+	}
+	assert(0); /* Hopefully not reached */
+	return 0;
+}
+
 // TODO: gmp_get_digit()?
