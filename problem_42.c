@@ -77,23 +77,14 @@ int main() {
 	/* we're done with the buffer now */
 	free(buf); buf = NULL; buf_p = NULL;
 
-	/* Calculate and store the "word value" of each word */
-	uint64_t *values = malloc(num_elements * sizeof(uint64_t));
-	if (values == NULL)
-		exit(1);
-
+	uint16_t triangle_words = 0;
 	for (int i=0; i < num_elements; i++) {
 		uint64_t value = 0;
 		char *p = arr[i];
 		for (; *p != 0; p++) {
 			value += (*p - 'A' + 1);
 		}
-		values[i] = value;
-	}
-
-	uint16_t triangle_words = 0;
-	for (int i=0; i<num_elements; i++) {
-		if (is_triangle(values[i]))
+		if (is_triangle(value))
 			triangle_words++;
 	}
 
