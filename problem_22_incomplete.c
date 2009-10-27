@@ -5,9 +5,30 @@
 #include <string.h>
 #include <gmp.h>
 
-/* Written: 2009-10-26, XXX */
+/* Written: 2009-10-26, 2009-10-27, XXX */
 
 #define DATAFILE "data/problem_22"
+
+// Bubble sort, but better than NO sort
+void char_sort_array(char **arr, const int num_elements) {
+	uint16_t loops = 0;
+	uint32_t n = num_elements;
+	uint8_t swapped;
+	do {
+		swapped = 0;
+		for (uint16_t i=0; i < n-1; i++, loops++) {
+			if (strcmp(arr[i], arr[i+1]) > 0) {
+				char *tmp = arr[i];
+				arr[i] = arr[i+1];
+				arr[i+1] = tmp;
+				swapped = 1;
+			}
+		}
+		n -= 1;
+	} while (swapped);
+	
+	printf("char_sort_array done, %hu loops\n", loops);
+}
 
 int main() {
 	FILE *f = fopen(DATAFILE, "r");
@@ -83,21 +104,13 @@ int main() {
 		}
 	}
 		
-	for (uint32_t i = 0; i < num_elements; i++) {
-		printf("%s\n", arr[i]);
-	}
-
 	free(buf); buf = NULL; buf_p = NULL;
 
-	/* Note: I wrote this sorting algorithm without any research - that's the whole
-	 * point of my writing this code. Learning for myself, without help. As such, 
-	 * it may well be horribly inefficient. I only know quicksort, but only in
-	 * python and haskell, which are very different from C.
-	 * I also know the NAMES of several other algorithms without knowing them,
-	 * or which one this is...
-	 */
-	// XXX: Sort names, etc.
-	
+	char_sort_array(arr, num_elements);
+
+
+	// XXX: Do the actual work
+
 
 	/* Cleanup */
 	for (uint32_t i = 0; i < num_elements; i++) {
