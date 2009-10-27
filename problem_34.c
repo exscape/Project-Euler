@@ -43,7 +43,7 @@ int main() {
 			sum += fac[n % 10];
 		}
 
-		if (sum > 2 && sum == i) {
+		if (sum == i && sum > 2) {
 			grand_sum += sum;
 		}
 	}
