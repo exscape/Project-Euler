@@ -4,34 +4,19 @@
 #include <stdint.h>
 #include <errno.h>
 
-/* For stat */
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
-
 /* Written: 2009-10-17 */
 
 #define DATAFILE "data/problem_8"
 
 int main() {
-	struct stat st;
-	if (stat(DATAFILE, &st) != 0) {
-		fprintf(stderr, "Unable to stat file (%s)\n", DATAFILE);
-		perror("stat");
-		exit(1);
-	}
-
-	off_t size = st.st_size;
-	if (size < 50*20+20) { /* 50 chars, 20 lines, plus newlines */
-		exit(1);
-	}
-
 	FILE *f = fopen(DATAFILE, "r");
 	if (!f) {
 		fprintf(stderr, "Unable to read data file (%s)\n", DATAFILE);
 		exit(1);
 	}
+	fseek(f, 0, SEEK_END);
+	int size = ftell(f);
+	rewind(f);
 
 	char *buf = malloc(size+1);
 	if (fread(buf, 1, size, f) != size) {

@@ -9,25 +9,25 @@
 
 #define DATAFILE "data/problem_22"
 
-// Bubble sort, but better than NO sort
-void char_sort_array(char **arr, const int num_elements) {
-	uint16_t loops = 0;
+// "Improved" bubble sort, but better than NO sort
+void char_sort_array(char **arr, const uint32_t num_elements) {
+	uint32_t loops = 0;
 	uint32_t n = num_elements;
 	uint8_t swapped;
+	char *tmp;
 	do {
 		swapped = 0;
-		for (uint16_t i=0; i < n-1; i++, loops++) {
+		for (uint32_t i=0; i < n-1; i++, loops++) {
 			if (strcmp(arr[i], arr[i+1]) > 0) {
-				char *tmp = arr[i];
+				/* swap the elements */
+				tmp = arr[i];
 				arr[i] = arr[i+1];
 				arr[i+1] = tmp;
 				swapped = 1;
 			}
 		}
-		n -= 1;
+		n -= 1; /* for each iteration, one more element is guaranteed to be at its correct, near-the-end place */
 	} while (swapped);
-	
-	printf("char_sort_array done, %hu loops\n", loops);
 }
 
 int main() {
@@ -47,34 +47,34 @@ int main() {
 	uint32_t chunk_read = 0;
 	while (!feof(f)) {
 		chunk_read = fread(chunk, 1, 1023, f);
-//		printf("read %u bytes\n", chunk_read);
 		chunk[chunk_read] = 0;
 		total_read += chunk_read;
 		if (total_read >= bufsize) {
+			/* total data is too large to fit, we need to resize our buffer */
 			buf = realloc(buf, bufsize * 2);
-//			printf("total_read = %u, bufsize = %d, resizing to %d bytes\n", total_read, bufsize, bufsize * 2);
 			if (buf == NULL) {
 				exit(1);
 			}
 			bufsize *= 2;
 		}
 
+		/* append the newly read data to the buffer */
 		strncat(buf, chunk, bufsize-1);
 	}
 	fclose(f); f = NULL;
 	free(chunk);
 
-//	printf("bufsize: %u, strlen(buf) = %zu\n", bufsize, strlen(buf));
-
-	uint16_t num_elements = 1; /* count the first one, too */
+	uint16_t num_elements = 1; /* count the first one, too (since there's no preceding comma, we start at 1) */
 	for (char *p = buf; *p != 0; p++) {
 		if (*p == ',')
 			num_elements++;
 	}
 	printf("%hu names in file\n", num_elements);
 
+	/* allocate space for num_elements char pointers */
 	char **arr = malloc((num_elements) * sizeof(char *));
 
+	/* allocate and set to zero memory for all the strings */
 	for (uint32_t i = 0; i < num_elements; i++) {
 		arr[i] = malloc(16); // XXX: Don't just make up a number!
 		if (arr[i] == NULL) {
@@ -84,6 +84,7 @@ int main() {
 		memset(arr[i], 0, 16);
 	}
 
+	/* read the strings from the linear buffer into the array */
 	uint32_t i = 0;
 	uint8_t in_string = 0;
 	char *buf_p = buf;
@@ -104,8 +105,10 @@ int main() {
 		}
 	}
 		
+	/* we're done with the buffer now */
 	free(buf); buf = NULL; buf_p = NULL;
 
+	/* sort the array */
 	char_sort_array(arr, num_elements);
 
 

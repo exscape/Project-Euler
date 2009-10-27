@@ -68,6 +68,7 @@ void char_sort_array(char **arr, const int num_elements) {
 	uint32_t n = num_elements;
 	uint8_t swapped;
 	do {
+		printf("n = %d\n", n);
 		char_print_array(arr, num_elements); // NEW LOOP
 		swapped = 0;
 		for (uint16_t i=0; i < n-1; i++, loops++) {
