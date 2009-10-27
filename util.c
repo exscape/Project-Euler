@@ -386,4 +386,30 @@ uint64_t gmp_get_length(mpz_t num) {
 	return digits;
 }
 
+/*
+ * arr: a char**, that is, the array of strings to sart
+ * num_elements: the number of elements in the array (no ending NULL or such is needed)
+ * return value: void
+ * Notes: The array is sorted in place, using a slightly improved bubble sort.
+ */
+void sort_char_array(char **arr, const uint32_t num_elements) {
+	uint32_t loops = 0;
+	uint32_t n = num_elements;
+	uint8_t swapped;
+	char *tmp;
+	do {
+		swapped = 0;
+		for (uint32_t i=0; i < n-1; i++, loops++) {
+			if (strcmp(arr[i], arr[i+1]) > 0) {
+				/* swap the elements */
+				tmp = arr[i];
+				arr[i] = arr[i+1];
+				arr[i+1] = tmp;
+				swapped = 1;
+			}
+		}
+		n -= 1; /* for each iteration, one more element is guaranteed to be at its correct, near-the-end place */
+	} while (swapped);
+}
+
 // TODO: gmp_get_digit()?

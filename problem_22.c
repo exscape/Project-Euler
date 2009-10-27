@@ -1,34 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <stdint.h>
 #include <string.h>
-#include <gmp.h>
+#include "util.c"
 
-/* Written: 2009-10-26, 2009-10-27, XXX */
+/* Written: 2009-10-26, 2009-10-27 */
 
 #define DATAFILE "data/problem_22"
-
-// "Improved" bubble sort, but better than NO sort
-void char_sort_array(char **arr, const uint32_t num_elements) {
-	uint32_t loops = 0;
-	uint32_t n = num_elements;
-	uint8_t swapped;
-	char *tmp;
-	do {
-		swapped = 0;
-		for (uint32_t i=0; i < n-1; i++, loops++) {
-			if (strcmp(arr[i], arr[i+1]) > 0) {
-				/* swap the elements */
-				tmp = arr[i];
-				arr[i] = arr[i+1];
-				arr[i+1] = tmp;
-				swapped = 1;
-			}
-		}
-		n -= 1; /* for each iteration, one more element is guaranteed to be at its correct, near-the-end place */
-	} while (swapped);
-}
 
 int main() {
 	FILE *f = fopen(DATAFILE, "r");
@@ -37,32 +15,22 @@ int main() {
 		exit(1);
 	}
 
-	uint32_t bufsize = 2048; /* A size we know is too small, to practice using realloc() */
-	char *chunk = malloc(1024);
-	char *buf = malloc(bufsize);
-	if (chunk == NULL || buf == NULL)
+	fseek(f, 0, SEEK_END);
+	uint32_t bufsize = ftell(f);
+	rewind(f);
+	if (bufsize == 1)
 		exit(1);
 
-	uint32_t total_read = 0;
-	uint32_t chunk_read = 0;
-	while (!feof(f)) {
-		chunk_read = fread(chunk, 1, 1023, f);
-		chunk[chunk_read] = 0;
-		total_read += chunk_read;
-		if (total_read >= bufsize) {
-			/* total data is too large to fit, we need to resize our buffer */
-			buf = realloc(buf, bufsize * 2);
-			if (buf == NULL) {
-				exit(1);
-			}
-			bufsize *= 2;
-		}
+	char *buf = malloc(bufsize + 1);
+	if (buf == NULL)
+		exit(1);
 
-		/* append the newly read data to the buffer */
-		strncat(buf, chunk, bufsize-1);
+	if (fread(buf, 1, bufsize, f) != bufsize) {
+		fprintf(stderr, "fread() failed!\n");
+		exit(1);
 	}
+
 	fclose(f); f = NULL;
-	free(chunk);
 
 	uint16_t num_elements = 1; /* count the first one, too (since there's no preceding comma, we start at 1) */
 	for (char *p = buf; *p != 0; p++) {
@@ -85,8 +53,8 @@ int main() {
 	}
 
 	/* read the strings from the linear buffer into the array */
-	uint32_t i = 0;
-	uint8_t in_string = 0;
+	uint32_t i = 0; /* counts the current name index */
+	uint8_t in_string = 0; /* BOOL, really; whether we are within quotes */
 	char *buf_p = buf;
 	for (char *cur_str = arr[0]; i < num_elements; cur_str = arr[++i]) {
 		for (char *p = cur_str; buf_p <= buf+strlen(buf); buf_p++ /* [sic!] */) {
@@ -109,11 +77,21 @@ int main() {
 	free(buf); buf = NULL; buf_p = NULL;
 
 	/* sort the array */
-	char_sort_array(arr, num_elements);
+	sort_char_array(arr, num_elements);
 
+	/* Calculate the "name value */
+	uint64_t sum = 0;
+	for (int i=0; i < num_elements; i++) {
+		uint32_t value = 0;
+		char *p = arr[i];
+		for (; *p != 0; p++) {
+			value += (*p - 'A' + 1);
+		}
+		value *= (i+1); /* value is sum of letter positions times index in list */
+		sum += value;
+	}
 
-	// XXX: Do the actual work
-
+	printf("Answer: %lu\n", sum);
 
 	/* Cleanup */
 	for (uint32_t i = 0; i < num_elements; i++) {
