@@ -89,7 +89,15 @@ int main() {
 
 	free(buf); buf = NULL; buf_p = NULL;
 
+	/* Note: I wrote this sorting algorithm without any research - that's the whole
+	 * point of my writing this code. Learning for myself, without help. As such, 
+	 * it may well be horribly inefficient. I only know quicksort, but only in
+	 * python and haskell, which are very different from C.
+	 * I also know the NAMES of several other algorithms without knowing them,
+	 * or which one this is...
+	 */
 	// XXX: Sort names, etc.
+	
 
 	/* Cleanup */
 	for (uint32_t i = 0; i < num_elements; i++) {
