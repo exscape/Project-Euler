@@ -20,8 +20,17 @@ static mpz_t set[10000];
 static uint32_t i = 0;
 
 uint8_t in_set(mpz_t n) {
-	qsort(set, i, sizeof(mpz_t), mpz_cmpfunc);
-	return (bsearch(&n, set, i, sizeof(mpz_t), mpz_cmpfunc) != NULL);
+	qsort(set, i, sizeof(mpz_t), mpz_cmpfunc); // works; XXX: move to add_to_set
+	gmp_printf("in_set called with n = %Zd\n", n);
+	mpz_t *p = bsearch(&n, &set, i, sizeof(mpz_t), mpz_cmpfunc);
+	if (p == NULL) {
+		gmp_printf(" ... bsearch returned NULL for %Zd\n", n);
+		return 0;
+	}
+	else {
+		gmp_printf(" ... bsearch returned %Zd\n", *p);
+		return 1;
+	}
 }
 
 void add_to_set(mpz_t n) {
@@ -32,13 +41,17 @@ void add_to_set(mpz_t n) {
 int main() {
 	mpz_t result;
 	mpz_init(result);
-	for (uint64_t a = 2; a <= 100; a++) {
-		for (uint64_t b = 2; b <= 100; b++) {
+	for (uint64_t a = 2; a <= 5; a++) {
+		for (uint64_t b = 2; b <= 5; b++) {
 			mpz_ui_pow_ui(result, a, b);
 			add_to_set(result);
 		}
 	}
 	mpz_clear(result);
+
+	for (int j=0; j<i; j++) {
+		gmp_printf("%Zd\n", set[j]);
+	}
 
 	printf("Answer: %u\n", i);
 
