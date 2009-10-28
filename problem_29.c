@@ -20,11 +20,15 @@ typedef struct {
 } gmp_int_set;
 
 /* 
- * Initialize a set (i.e. allocate memory and set variables)/
+ * Initialize a set (i.e. allocate memory and set variables)
  * set: the set to initialize
  * size: the number of elements to initally allocate memory for (will be resized as needed)
  */
 void gmp_int_set_alloc(gmp_int_set *set, size_t size) {
+	if (size <= 0) {
+		fprintf(stderr, "gmp_int_set_alloc called with size <= 0\n");
+		exit(1);
+	}
 	set->arr = malloc(size * sizeof(mpz_t));
 	set->size = size;
 	set->num_elements = 0;
@@ -42,7 +46,7 @@ void gmp_int_set_free(gmp_int_set *set) {
  * haystack: the set to look in
  * needle: the GMP integer to look for
  * return value: 1 if found, 0 otherwise
- * XXX: Linear search in unsorted set, better than sorting and using a binary search, or not?
+ * XXX: The performance is HORRIBLE - the runtime is reduced from 183ms to 1ms with a return 0; at the start here!
  */
 uint8_t in_set(const gmp_int_set *haystack, const mpz_t needle) {
 	for (int32_t i = 0; i < haystack->num_elements; i++) {
