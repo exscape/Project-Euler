@@ -7,7 +7,12 @@
 
 /* Written: 2009-10-28 */
 
-/* Holds a set (an array unique elements) of mpz_t variables */
+//
+// XXX: TODO: Split the set functions into a "library"; add removal of elements, and possibly also memory
+// deallocation when removing enough elements.
+//
+
+/* Holds a set (an array of unique elements) of mpz_t variables */
 typedef struct {
 	mpz_t *arr; // The data storage itself
 	size_t size; // The currently allocated size (in elements)
