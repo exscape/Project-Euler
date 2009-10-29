@@ -74,7 +74,7 @@ void add_to_set(gmp_int_set *set, mpz_t n) {
 //		printf("num_elements = %zu, size = %zu\n", set->num_elements, set->size);
 	if (!in_set(set, n)) {
 		/* make sure that we don't step over our boundaries */
-		if (set->num_elements + 2 > set->size) { // XXX: Why is +2 needed, and not just +1? (qsort segfaults with 1)
+		if (set->num_elements + 1 > set->size) { // XXX: Does + 1 work now that set_elements isn't incremented prematurely? Seems so.
 			size_t new_size = set->size * 2;
 			if (new_size < 10)
 				new_size = 10;
