@@ -58,8 +58,7 @@ static int mpz_cmpfunc(const void *in1, const void *in2) {
 uint8_t in_set(const gmp_int_set *haystack, const mpz_t needle) {
 //	qsort(haystack->arr, haystack->num_elements, sizeof(mpz_t), mpz_cmpfunc);
 //	XXX: qsort + bsearch won't work, it's much too slow to sort the set this way. Linear search is 40 times faster.
-
-	for (int32_t i = 0; i < haystack->num_elements; i++) {
+	for (size_t i = 0; i < haystack->num_elements; i++) {
 		if (!mpz_cmp(haystack->arr[i], needle)) {
 			return 1;
 		}
