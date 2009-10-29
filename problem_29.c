@@ -85,7 +85,8 @@ void add_to_set(gmp_int_set *set, mpz_t n) {
 				exit(1);
 			}
 		}
-		mpz_init(set->arr[set->num_elements++]);
+		set->num_elements++;
+		mpz_init(set->arr[set->num_elements]);
 		mpz_set(set->arr[set->num_elements], n);
 	}
 }
