@@ -85,9 +85,9 @@ void add_to_set(gmp_int_set *set, mpz_t n) {
 				exit(1);
 			}
 		}
-		set->num_elements++;
 		mpz_init(set->arr[set->num_elements]);
 		mpz_set(set->arr[set->num_elements], n);
+		set->num_elements++;
 	}
 }
 
@@ -97,7 +97,7 @@ void add_to_set(gmp_int_set *set, mpz_t n) {
 
 int main() {
 	gmp_int_set *set = malloc(sizeof(*set));
-	gmp_int_set_alloc(set, 200); /* initial storage for 200 numbers, which is less than enough, to test realloc */
+	gmp_int_set_alloc(set, 0); /* initial storage for 200 numbers, which is less than enough, to test realloc */
 
 	mpz_t result;
 	mpz_init(result);
