@@ -11,7 +11,7 @@
 //#define NUM 13195 /* Correct answer: 29 */
 
 //
-// INCOMPLETE FUNCTION!
+// XXX: INCOMPLETE FUNCTION!
 //
 uint64_t *get_prime_factors(uint64_t n) {
 	uint32_t size = 10000; /* start off with a fair guess; XXX: make this ~10, fix realloc */
@@ -46,7 +46,7 @@ int main() {
 	uint64_t *arr = get_prime_factors(NUM);;
 	uint64_t i;
 	for (i = 0; arr[i] != 0; i++) 
-	
+		;
 	// The last element of the array is the largest and thus the answer;
 	// -1 is needed due to the above loop setting i to the NULL terminating element.
 	printf("Answer: %lu\n", arr[i-1]);
