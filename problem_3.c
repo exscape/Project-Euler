@@ -38,6 +38,19 @@ uint64_list *list_create(void) {
 }
 
 /*
+ * Compresses the list down to the bare minimum of elements, virtually freeing unused memory
+ * list: the list to work with
+ * return value: 1 on success, 0 on failure
+ */
+uint8_t list_compress(uint64_list **list) {
+	*list = realloc(*list, (*list)->used * sizeof(uint64_t));
+	if (*list == NULL)
+		return 0;
+	else
+		return 1;
+}
+
+/*
  * Free a list.
  * list: The list to free; the pointer will also be set to NULL
  * return value: none
@@ -99,13 +112,13 @@ uint64_list *get_prime_factors(const uint64_t orig_n) {
 	uint64_t n = orig_n;
 	uint64_t i = 2;
 	uint64_t sq_i = i*i;
-    for (; sq_i <= n; i++) {  
+	for (; sq_i <= n; i++) {  
 		while (n % i == 0) {
 			list_add(&list, i);
 			n /= i;
-        }
+		}
 		sq_i += 2 * i + 1; // XXX: Why does this work?
-    }
+	}
 	if (n != 1 && n != orig_n)
 		list_add(&list, n); // XXX: Or this?
 
@@ -117,6 +130,8 @@ int main() {
 	list_foreach_element(list) {
 		printf("prime factor: %lu\n", list->arr[i]);
 	}
+	
+	list_compress(&list);
 
 	// The last element of the array is the largest and thus the answer; XXX: helper function!
 	printf("Answer: %lu\n", list->arr[list->used-1]);
