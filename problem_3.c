@@ -44,6 +44,7 @@ uint64_list *list_create(void) {
  */
 uint8_t list_compress(uint64_list **list) {
 	*list = realloc(*list, (*list)->used * sizeof(uint64_t));
+	(*list)->size = (*list)->used;
 	if (*list == NULL)
 		return 0;
 	else
@@ -69,6 +70,7 @@ void list_free(uint64_list **list) {
  */
 void list_add(uint64_list **list, uint64_t n) {
 	// XXX: memory management!!
+	printf("Adding element %lu; stats before: used=%zu, size=%zu\n", n, (*list)->used, (*list)->size);
 	*(*list)->p++ = n;
 	(*list)->used++;
 
@@ -89,6 +91,8 @@ void list_add(uint64_list **list, uint64_t n) {
 		printf("arr = %p to %p, ptr = %p, adding %lu\n", (void *)arr, (void *)(arr+size), (void *)ptr, i);
 		*ptr++ = i; // add this factor to the array
 	*/
+
+	printf("Added element %lu; stats after: used=%zu, size=%zu\n", n, (*list)->used, (*list)->size);
 }
 
 // XXX: This needs work - it's hardly obvious that the usage is
