@@ -171,7 +171,7 @@ uint8_t list_add(uint64_list **list, uint64_t n) {
 		size_t p_offset = (*list)->p - (*list)->arr; // Needed to point p correctly in case realloc() moves our data
 		uint64_t *new_ptr = realloc((*list)->arr, new_size * sizeof(uint64_t));
 		if (new_ptr == NULL) {
-			list_free(list);
+			list_free(list); // XXX: Should we free the list here, or just return 0?
 			return 0;
 		}
 		(*list)->arr = new_ptr;
