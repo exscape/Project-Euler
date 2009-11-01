@@ -63,6 +63,8 @@ void list_free(uint64_list **list) {
  * return value: 1 on success, 0 on failure
  */
 uint8_t list_compress(uint64_list **list) {
+	if ((*list)->size == (*list)->used)
+		return 1;
 	// Valgrind forces us to do this; I'm not sure if the array CAN even be moved by a downsizing, but it stops the complaining,
 	// and better safe than sorry.
 	size_t p_offset = (*list)->p - (*list)->arr;
@@ -156,7 +158,7 @@ int main() {
 	}
 
 	list_foreach_element(list) {
-		printf("prime factor: %lu\n", list->arr[i]);
+		printf("Element: %lu\n", list->arr[i]);
 	}
 
 	printf("List stats in main(): used=%zu, size=%zu\n", list->used, list->size);
@@ -167,11 +169,11 @@ int main() {
 	printf("List stats in main() post-compress: used=%zu, size=%zu\n", list->used, list->size);
 
 	list_foreach_element(list) {
-		printf("prime factor: %lu\n", list->arr[i]);
+		printf("Element: %lu\n", list->arr[i]);
 	}
 
 	// The last element of the array is the largest and thus the answer; XXX: helper function!
-	printf("Answer: %lu\n", list->arr[list->used-1]);
+//	printf("Answer: %lu\n", list->arr[list->used-1]);
 	list_free(&list);
 
 	return 0;
