@@ -5,6 +5,7 @@
 #include <math.h>
 #include <assert.h>
 #include <gmp.h>
+#include "list.c"
 
 /*
  * n: the fibonacci number
