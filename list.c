@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+/*
+ * This file implements a set of functions to handle a list of unsigned integers,
+ * complete with automatic memory management (except that the caller needs to call list_free()).
+ * All function calls takes a pointer to a list, i.e. list_sort(&list), for consistency.
+ */
+
 typedef struct {
 	size_t used; // The number of elements used
 	size_t size; // The size of the array in elements
@@ -45,22 +51,14 @@ uint64_list *list_create(size_t orig_size) {
  * return value: a pointer to the newly allocated and populated list
  */
 uint64_list *list_copy(uint64_list **orig) {
-	uint64_list *copy;
 	if (orig == NULL)
 		return NULL;
 
-	copy = list_create((*orig)->used); /* make sure it's big enough */
+	uint64_list *copy = list_create((*orig)->used); /* make sure it's big enough */
 	if (copy == NULL)
 		return NULL;
 	
-	/* Do the copy */
-	/*
-	for (size_t i = 0; i < (*orig)->used; i++) {
-		copy->arr[i] = (*orig)->arr[i];
-	}
-	*/
 	memcpy(copy->arr, (*orig)->arr, (*orig)->used * sizeof(uint64_t));
-
 	copy->used = (*orig)->used;
 
 	return copy;
