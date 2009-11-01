@@ -20,12 +20,55 @@ typedef struct {
 
 //
 // XXX: TODO:
-// * list_sort(uint64_list **list), using qsort
 // * list_find(uint64_list **list, uint64_t n) - linear search? qsort would reorder the array, which
 //                                               the caller may not want. return value = index, or -1 if not found.
 // * list_copy(list, list) - copy elements up to ->used, or to ->size?
 // * ...
 //
+
+/* 
+ * Helper functions for the list_sort* functions
+ */
+
+int list_cmpfunc(const void *i1, const void *i2) {
+	uint64_t *n1 = (uint64_t *)i1;
+	uint64_t *n2 = (uint64_t *)i2;
+	if (*n1 < *n2)
+		return -1;
+	else if (*n1 > *n2)
+		return 1;
+	else
+		return 0;
+}
+
+int list_cmpfunc_reverse(const void *i1, const void *i2) {
+	uint64_t *n1 = (uint64_t *)i1;
+	uint64_t *n2 = (uint64_t *)i2;
+	if (*n1 < *n2)
+		return 1;
+	else if (*n1 > *n2)
+		return -1;
+	else
+		return 0;
+}
+
+/*
+ * Sorts the given list in numerical order
+ * list: the list to be sorted (in-place)
+ * return value: none
+ */
+void list_sort(uint64_list **list) {
+	qsort((*list)->arr, (*list)->used, sizeof(uint64_t), list_cmpfunc);
+}
+
+/*
+ * Sorts the given list in reverse numerical order
+ * list: the list to be sorted (in-place)
+ * return value: none
+ */
+void list_sort_reverse(uint64_list **list) {
+	qsort((*list)->arr, (*list)->used, sizeof(uint64_t), list_cmpfunc_reverse);
+}
 
 /*
  * Create a dynamically allocated list of uint64_ts
@@ -168,6 +211,18 @@ int main() {
 
 	printf("List stats in main() post-compress: used=%zu, size=%zu\n", list->used, list->size);
 
+	list_foreach_element(list) {
+		printf("Element: %lu\n", list->arr[i]);
+	}
+
+	printf("Sorted:\n");
+	list_sort(&list);
+	list_foreach_element(list) {
+		printf("Element: %lu\n", list->arr[i]);
+	}
+
+	printf("Reverse sorted:\n");
+	list_sort_reverse(&list);
 	list_foreach_element(list) {
 		printf("Element: %lu\n", list->arr[i]);
 	}
