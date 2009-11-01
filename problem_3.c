@@ -63,12 +63,17 @@ void list_free(uint64_list **list) {
  * return value: 1 on success, 0 on failure
  */
 uint8_t list_compress(uint64_list **list) {
+	// Valgrind forces us to do this; I'm not sure if the array CAN even be moved by a downsizing, but it stops the complaining,
+	// and better safe than sorry.
+	size_t p_offset = (*list)->p - (*list)->arr;
+
 	uint64_t *new_ptr = realloc((*list)->arr, (*list)->used * sizeof(uint64_t));
 	if (new_ptr == NULL) {
 		list_free(list);
 		return 0;
 	}
 	(*list)->arr = new_ptr;
+	(*list)->p = new_ptr + p_offset;
 	(*list)->size = (*list)->used;
 
 	return 1;
@@ -84,7 +89,7 @@ uint8_t list_add(uint64_list **list, uint64_t n) {
 	printf("Adding element \"%lu\"; stats before: used=%zu, size=%zu ...", n, (*list)->used, (*list)->size);
 
 	if ((*list)->used + 1 > (*list)->size) {
-		size_t new_size = (*list)->used + 2; // XXX: Add more than 1; 10, perhaps?
+		size_t new_size = (*list)->used + 1; // XXX: Add more than 1; 10, perhaps?
 		printf(" so we need to realloc the array to %zu elements\n", new_size);
 		size_t p_offset = (*list)->p - (*list)->arr; // Needed to point p correctly in case realloc() moves our data
 		uint64_t *new_ptr = realloc((*list)->arr, new_size * sizeof(uint64_t));
@@ -157,6 +162,7 @@ int main() {
 	printf("List stats in main(): used=%zu, size=%zu\n", list->used, list->size);
 
 	list_compress(&list);
+	list_add(&list, 666);
 
 	printf("List stats in main() post-compress: used=%zu, size=%zu\n", list->used, list->size);
 
