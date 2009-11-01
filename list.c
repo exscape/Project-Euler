@@ -65,6 +65,15 @@ uint64_list *list_copy(uint64_list **orig) {
 }
 
 /*
+ * Returns the length of a list.
+ * list: the list to check
+ * return value: the length of the list
+ */
+inline size_t list_length (uint64_list **list) {
+	return (*list)->used;
+}
+
+/*
  * Returns the index of the (first) value "n" in the list
  * list: the list to search
  * n: the item to search for

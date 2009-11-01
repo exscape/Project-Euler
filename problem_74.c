@@ -33,7 +33,7 @@ int main() {
 				n += fac[tmp % 10];
 			}
 		}
-		if (list->used == 60)
+		if (list_length(&list) == 60)
 			answer++;
 		list_free(&list);
 	}
