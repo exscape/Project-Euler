@@ -20,9 +20,59 @@ typedef struct {
 
 //
 // XXX: TODO:
-// * list_copy(list, list) - copy elements up to ->used, or to ->size?
-// * ...
+// * Removing elements? That could be a real pain, though; are there choices except leaving holes (wasted memory,
+//   that needs another array tracking it) or compacting it at every removal (slow!)?
+// * Fix list_foreach_elements; the current approach isn't exactly a black box one.
 //
+
+/*
+ * Create a dynamically allocated list of uint64_ts
+ * return value: A preallocated list, or NULL if calloc fails.
+ */
+uint64_list *list_create(size_t orig_size) {
+	// Allocate the list itself
+	uint64_list *list = calloc(1, sizeof(*list));
+	if (list == NULL)
+		return NULL;
+	list->used = 0;
+	list->size = orig_size;
+	// Allocate the storage array
+	list->arr = calloc(list->size, sizeof(uint64_t));
+	if (list->arr == NULL) {
+		return NULL;
+	}
+	// Set the current element-pointer
+	list->p = list->arr;
+
+	return list;
+}
+
+/*
+ * Copies a list, up to the last used element, that is, the copy may be of smaller capacity than the original.
+ * orig: the list to copy
+ * return value: a pointer to the newly allocated and populated list
+ */
+uint64_list *list_copy(uint64_list **orig) {
+	uint64_list *copy;
+	if (orig == NULL)
+		return NULL;
+
+	copy = list_create((*orig)->used); /* make sure it's big enough */
+	if (copy == NULL)
+		return NULL;
+	
+	/* Do the copy */
+	/*
+	for (size_t i = 0; i < (*orig)->used; i++) {
+		copy->arr[i] = (*orig)->arr[i];
+	}
+	*/
+	memcpy(copy->arr, (*orig)->arr, (*orig)->used * sizeof(uint64_t));
+
+	copy->used = (*orig)->used;
+
+	return copy;
+}
 
 /*
  * Returns the index of the (first) value "n" in the list
@@ -80,28 +130,6 @@ void list_sort(uint64_list **list) {
  */
 void list_sort_reverse(uint64_list **list) {
 	qsort((*list)->arr, (*list)->used, sizeof(uint64_t), list_cmpfunc_reverse);
-}
-
-/*
- * Create a dynamically allocated list of uint64_ts
- * return value: A preallocated list, or NULL if calloc fails.
- */
-uint64_list *list_create(void) {
-	// Allocate the list itself
-	uint64_list *list = calloc(1, sizeof(*list));
-	if (list == NULL)
-		return NULL;
-	list->used = 0;
-	list->size = 10;
-	// Allocate the storage array
-	list->arr = calloc(list->size, sizeof(uint64_t));
-	if (list->arr == NULL) {
-		return NULL;
-	}
-	// Set the current element-pointer
-	list->p = list->arr;
-
-	return list;
 }
 
 /*
@@ -178,7 +206,7 @@ uint8_t list_add(uint64_list **list, uint64_t n) {
  * return value: A preallocated list containing all the prime factors. The caller is resonsible for freeing this.
  */
 uint64_list *get_prime_factors(const uint64_t orig_n) {
-	uint64_list *list = list_create();
+	uint64_list *list = list_create(10);
 	if (list == NULL)
 		return NULL;
 	if (orig_n < 2) {
@@ -208,17 +236,31 @@ int main() {
 		exit(1);
 	}
 
+	printf("Main list:\n");
 	list_foreach_element(list) {
 		printf("Element: %lu\n", list->arr[i]);
 	}
 
+	uint64_list *copy = list_copy(&list);
+	if (copy == NULL) {
+		fprintf(stderr, "List copy failed!\n");
+		exit(1);
+	}
+
+	printf("List copy:\n");
+	list_foreach_element(copy) {
+		printf("Element: %lu\n", copy->arr[i]);
+	}
+
 	printf("List stats in main(): used=%zu, size=%zu\n", list->used, list->size);
+	printf("Copy stats in main(): used=%zu, size=%zu\n", copy->used, copy->size);
 
 	list_compress(&list);
 
 	printf("List stats in main() post-compress: used=%zu, size=%zu\n", list->used, list->size);
 
 	list_free(&list);
+	list_free(&copy);
 
 	return 0;
 }
