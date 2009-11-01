@@ -20,11 +20,23 @@ typedef struct {
 
 //
 // XXX: TODO:
-// * list_find(uint64_list **list, uint64_t n) - linear search? qsort would reorder the array, which
-//                                               the caller may not want. return value = index, or -1 if not found.
 // * list_copy(list, list) - copy elements up to ->used, or to ->size?
 // * ...
 //
+
+/*
+ * Returns the index of the (first) value "n" in the list
+ * list: the list to search
+ * n: the item to search for
+ * return value: the index of the item, or -1 if nothing it found.
+ */
+int64_t list_find(uint64_list **list, uint64_t n) {
+	for (size_t i = 0; i < (*list)->used; i++) {
+		if ((*list)->arr[i] == n)
+			return i;
+	}
+	return -1;
+}
 
 /* 
  * Helper functions for the list_sort* functions
@@ -75,15 +87,18 @@ void list_sort_reverse(uint64_list **list) {
  * return value: A preallocated list, or NULL if calloc fails.
  */
 uint64_list *list_create(void) {
+	// Allocate the list itself
 	uint64_list *list = calloc(1, sizeof(*list));
 	if (list == NULL)
 		return NULL;
 	list->used = 0;
-	list->size = 1; // XXX: Change to a more sensible value (10?) when memory allocation works
+	list->size = 10;
+	// Allocate the storage array
 	list->arr = calloc(list->size, sizeof(uint64_t));
 	if (list->arr == NULL) {
 		return NULL;
 	}
+	// Set the current element-pointer
 	list->p = list->arr;
 
 	return list;
@@ -95,7 +110,9 @@ uint64_list *list_create(void) {
  * return value: none
  */
 void list_free(uint64_list **list) {
+	// Free the storage array
 	free((*list)->arr);
+	// Free the list itself
 	free(*list);
 	*list = NULL;
 }
@@ -131,11 +148,8 @@ uint8_t list_compress(uint64_list **list) {
  * return value: 1 for success, 0 for failure
  */
 uint8_t list_add(uint64_list **list, uint64_t n) {
-	printf("Adding element \"%lu\"; stats before: used=%zu, size=%zu ...", n, (*list)->used, (*list)->size);
-
 	if ((*list)->used + 1 > (*list)->size) {
-		size_t new_size = (*list)->used + 1; // XXX: Add more than 1; 10, perhaps?
-		printf(" so we need to realloc the array to %zu elements\n", new_size);
+		size_t new_size = (*list)->used + 10;
 		size_t p_offset = (*list)->p - (*list)->arr; // Needed to point p correctly in case realloc() moves our data
 		uint64_t *new_ptr = realloc((*list)->arr, new_size * sizeof(uint64_t));
 		if (new_ptr == NULL) {
@@ -146,15 +160,9 @@ uint8_t list_add(uint64_list **list, uint64_t n) {
 		(*list)->size = new_size;
 		(*list)->p = (*list)->arr + p_offset;
 	}
-	else
-		printf(" so NO realloc will be necessary\n");
-
-	printf("list = %p to %p, p = %p, adding %lu\n", (void *)(*list)->arr, (void *)((*list)->arr+(*list)->size), (void *)(*list)->p, n);
 
 	*(*list)->p++ = n;
 	(*list)->used++;
-
-	printf("Added element \"%lu\"; stats after: used=%zu, size=%zu\n", n, (*list)->used, (*list)->size);
 
 	return 1;
 }
@@ -207,28 +215,9 @@ int main() {
 	printf("List stats in main(): used=%zu, size=%zu\n", list->used, list->size);
 
 	list_compress(&list);
-	list_add(&list, 666);
 
 	printf("List stats in main() post-compress: used=%zu, size=%zu\n", list->used, list->size);
 
-	list_foreach_element(list) {
-		printf("Element: %lu\n", list->arr[i]);
-	}
-
-	printf("Sorted:\n");
-	list_sort(&list);
-	list_foreach_element(list) {
-		printf("Element: %lu\n", list->arr[i]);
-	}
-
-	printf("Reverse sorted:\n");
-	list_sort_reverse(&list);
-	list_foreach_element(list) {
-		printf("Element: %lu\n", list->arr[i]);
-	}
-
-	// The last element of the array is the largest and thus the answer; XXX: helper function!
-//	printf("Answer: %lu\n", list->arr[list->used-1]);
 	list_free(&list);
 
 	return 0;
