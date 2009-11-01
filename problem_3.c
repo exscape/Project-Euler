@@ -15,8 +15,17 @@ typedef struct {
 	size_t used; // The number of elements used
 	size_t size; // The size of the array in elements
 	uint64_t *arr; // The storage array itself
-	uint64_t *p; // A pointer to the current item in the array (XXX: (arr+used) instead?)
+	uint64_t *p; // A pointer to the first free item in the array (XXX: (arr+used) instead?)
 } uint64_list;
+
+//
+// XXX: TODO:
+// * list_sort(uint64_list **list), using qsort
+// * list_find(uint64_list **list, uint64_t n) - linear search? qsort would reorder the array, which
+//                                               the caller may not want. return value = index, or -1 if not found.
+// * list_copy(list, list) - copy elements up to ->used, or to ->size?
+// * ...
+//
 
 /*
  * Create a dynamically allocated list of uint64_ts
@@ -27,7 +36,7 @@ uint64_list *list_create(void) {
 	if (list == NULL)
 		return NULL;
 	list->used = 0;
-	list->size = 200; // XXX: FIXME when memory management is working
+	list->size = 1; // XXX: Change to a more sensible value (10?) when memory allocation works
 	list->arr = calloc(list->size, sizeof(uint64_t));
 	if (list->arr == NULL) {
 		return NULL;
@@ -35,20 +44,6 @@ uint64_list *list_create(void) {
 	list->p = list->arr;
 
 	return list;
-}
-
-/*
- * Compresses the list down to the bare minimum of elements, virtually freeing unused memory
- * list: the list to work with
- * return value: 1 on success, 0 on failure
- */
-uint8_t list_compress(uint64_list **list) {
-	*list = realloc(*list, (*list)->used * sizeof(uint64_t));
-	(*list)->size = (*list)->used;
-	if (*list == NULL)
-		return 0;
-	else
-		return 1;
 }
 
 /*
@@ -63,40 +58,59 @@ void list_free(uint64_list **list) {
 }
 
 /*
+ * Compresses the list down to the bare minimum of elements, virtually freeing unused memory
+ * list: the list to work with
+ * return value: 1 on success, 0 on failure
+ */
+uint8_t list_compress(uint64_list **list) {
+	uint64_t *new_ptr = realloc((*list)->arr, (*list)->used * sizeof(uint64_t));
+	if (new_ptr == NULL) {
+		list_free(list);
+		return 0;
+	}
+	(*list)->arr = new_ptr;
+	(*list)->size = (*list)->used;
+
+	return 1;
+}
+
+/*
  * Add a number to a list, allocating more memory if necessary
  * list: the list to work with
  * n: the number to add to the list
- * return value: none
+ * return value: 1 for success, 0 for failure
  */
-void list_add(uint64_list **list, uint64_t n) {
-	// XXX: memory management!!
-	printf("Adding element %lu; stats before: used=%zu, size=%zu\n", n, (*list)->used, (*list)->size);
+uint8_t list_add(uint64_list **list, uint64_t n) {
+	printf("Adding element \"%lu\"; stats before: used=%zu, size=%zu ...", n, (*list)->used, (*list)->size);
+
+	if ((*list)->used + 1 > (*list)->size) {
+		size_t new_size = (*list)->used + 2; // XXX: Add more than 1; 10, perhaps?
+		printf(" so we need to realloc the array to %zu elements\n", new_size);
+		size_t p_offset = (*list)->p - (*list)->arr; // Needed to point p correctly in case realloc() moves our data
+		uint64_t *new_ptr = realloc((*list)->arr, new_size * sizeof(uint64_t));
+		if (new_ptr == NULL) {
+			list_free(list);
+			return 0;
+		}
+		(*list)->arr = new_ptr;
+		(*list)->size = new_size;
+		(*list)->p = (*list)->arr + p_offset;
+	}
+	else
+		printf(" so NO realloc will be necessary\n");
+
+	printf("list = %p to %p, p = %p, adding %lu\n", (void *)(*list)->arr, (void *)((*list)->arr+(*list)->size), (void *)(*list)->p, n);
+
 	*(*list)->p++ = n;
 	(*list)->used++;
 
-	/*
-		if (used_factors + 2 > size) { // XXX: +2 needed for NULL, or is that an OBOE?
-			// we need more memory to hold this factor
-			uint32_t new_size = size * 5; // XXX: +2 is testing only! XXX: ALWAYS +2 or more, due to the NULL termination below!!! *2 is a bad idea - it's too much. +10?
-//				if (new_size < 10)
-//					new_size = 10;
-			printf("Reallocating; size = %u, needed = %u; new size = %u\n", size, used_factors + 1, new_size);
-			arr = realloc(arr, new_size * sizeof(uint64_t));
-			if (arr == NULL)
-				return NULL;
-			size = new_size;
-		}
-		used_factors++;
+	printf("Added element \"%lu\"; stats after: used=%zu, size=%zu\n", n, (*list)->used, (*list)->size);
 
-		printf("arr = %p to %p, ptr = %p, adding %lu\n", (void *)arr, (void *)(arr+size), (void *)ptr, i);
-		*ptr++ = i; // add this factor to the array
-	*/
-
-	printf("Added element %lu; stats after: used=%zu, size=%zu\n", n, (*list)->used, (*list)->size);
+	return 1;
 }
 
 // XXX: This needs work - it's hardly obvious that the usage is
-// list_foreach_element(list) { do_something_with(list->arr[i]) } ...
+// list_foreach_element(list) { do_something_with(list->arr[i]) } ... nor should it be that way!
 #define list_foreach_element(list) \
 	for (size_t i = 0; i < (list)->used; i++)
 
@@ -131,17 +145,27 @@ uint64_list *get_prime_factors(const uint64_t orig_n) {
 
 int main() {
 	uint64_list *list = get_prime_factors(NUM);
+	if (list == NULL) {
+		fprintf(stderr, "Failed to get a list of prime factors!\n");
+		exit(1);
+	}
+
 	list_foreach_element(list) {
 		printf("prime factor: %lu\n", list->arr[i]);
 	}
-	
+
+	printf("List stats in main(): used=%zu, size=%zu\n", list->used, list->size);
+
 	list_compress(&list);
+
+	printf("List stats in main() post-compress: used=%zu, size=%zu\n", list->used, list->size);
+
+	list_foreach_element(list) {
+		printf("prime factor: %lu\n", list->arr[i]);
+	}
 
 	// The last element of the array is the largest and thus the answer; XXX: helper function!
 	printf("Answer: %lu\n", list->arr[list->used-1]);
-
-	printf("Move get_divisors to util.c\n");
-
 	list_free(&list);
 
 	return 0;
