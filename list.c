@@ -30,6 +30,7 @@ uint64_list *list_create(size_t orig_size) {
 	// Allocate the storage array
 	list->arr = calloc(list->size, sizeof(uint64_t));
 	if (list->arr == NULL) {
+		free(list);
 		return NULL;
 	}
 	// Set the current element-pointer
