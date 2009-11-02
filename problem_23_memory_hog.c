@@ -5,7 +5,7 @@
 #include "util.c"
 
 /* Written: 2009-11-01 (late evening), 2009-11-02, XXX */
-// XXX: Uses slightly more than 700MB(!!!) of RAM. Obviously not acceptable.
+// XXX: Uses slightly more than 700MB(!!!) of RAM (in practice). Obviously not acceptable.
 
 uint16_t divisor_sum(uint16_t n) {
 	uint16_t sum = 0;
@@ -44,6 +44,7 @@ int main() {
 	}
 
 	printf("Answer: %lu\n", answer);
+	printf("List sizes: %lu + %lu elements * 8 bytes = ~%lu bytes total, plus overhead\n", list_length(&ab_nums), list_length(&sums), (list_length(&ab_nums) + list_length(&sums)) * 8);
 
 	list_free(&ab_nums);
 	list_free(&sums);
