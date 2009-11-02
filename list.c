@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 
 /*
  * This file implements a set of functions to handle a list of unsigned integers,
@@ -214,4 +215,4 @@ int64_t list_bsearch(uint64_list **list, uint64_t n)  {
 // XXX: This needs work - it's hardly obvious that the usage is
 // list_foreach_element(list) { do_something_with(list->arr[i]) } ... nor should it be that way!
 #define list_foreach_element(list, loopvar) \
-	for (size_t loopvar = 0; loopvar < (list)->used; (loopvar)++)
+	for (size_t loopvar = 0; loopvar < (*list)->used; (loopvar)++)
