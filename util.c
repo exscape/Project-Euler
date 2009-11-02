@@ -419,6 +419,8 @@ void sort_char_array(char **arr, const uint32_t num_elements) {
  * notes: Probably quite slow.
  */
 uint8_t is_triangle(uint64_t n) {
+	if (n < 1)
+		return 0;
 	for (uint64_t i=1; i <= n; i++) {
 		uint64_t tri = 0.5*i*(i+1);
 		if (n == tri)
@@ -436,6 +438,8 @@ uint8_t is_triangle(uint64_t n) {
  * notes: Probably quite slow.
  */
 uint8_t is_pentagonal(uint64_t n) {
+	if (n < 1)
+		return 0;
 	for (uint64_t i = 1; i <= n; i++) {
 		uint64_t pent = (i*(3*i-1))/2;
 		if (n == pent)
@@ -453,6 +457,8 @@ uint8_t is_pentagonal(uint64_t n) {
  * notes: Probably quite slow.
  */
 uint8_t is_hexagonal(uint64_t n) {
+	if (n < 1)
+		return 0;
 	for (uint64_t i = 1; i <= n; i++) {
 		uint64_t hex = i*(2*i-1);
 		if (n == hex)
