@@ -201,7 +201,7 @@ uint8_t list_add(uint64_list **list, uint64_t n) {
  * Uses a binary search to find the index of a number. THE LIST MUST BE SORTED!
  * list: the SORTED list to search
  * n: the number to search for
- * return value: the index of (first occurance of) the number, or -1 if not found
+ * return value: the index of (an undefined occurance of) the number, or -1 if not found
  */
 int64_t list_bsearch(uint64_list **list, uint64_t n)  {
 	uint64_t *p = bsearch(&n, (*list)->arr, (*list)->used, sizeof(uint64_t), list_cmpfunc);
