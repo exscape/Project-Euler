@@ -69,9 +69,12 @@ uint64_list *list_copy(uint64_list **orig) {
  * list: the list to check
  * return value: the length of the list
  */
+/*
 inline size_t list_length (uint64_list **list) {
 	return (*list)->used;
 }
+*/
+#define list_length(list) ((*list)->used)
 
 /*
  * Returns the index of the (first) value "n" in the list
@@ -194,7 +197,21 @@ uint8_t list_add(uint64_list **list, uint64_t n) {
 	return 1;
 }
 
+/*
+ * Uses a binary search to find the index of a number. THE LIST MUST BE SORTED!
+ * list: the SORTED list to search
+ * n: the number to search for
+ * return value: the index of (first occurance of) the number, or -1 if not found
+ */
+int64_t list_bsearch(uint64_list **list, uint64_t n)  {
+	uint64_t *p = bsearch(&n, (*list)->arr, (*list)->used, sizeof(uint64_t), list_cmpfunc);
+	if (p == NULL)
+		return -1;
+	else 
+		return ( p - (*list)->arr );
+}
+
 // XXX: This needs work - it's hardly obvious that the usage is
 // list_foreach_element(list) { do_something_with(list->arr[i]) } ... nor should it be that way!
-#define list_foreach_element(list) \
-	for (size_t i = 0; i < (list)->used; i++)
+#define list_foreach_element(list, loopvar) \
+	for (size_t loopvar = 0; loopvar < (list)->used; (loopvar)++)
