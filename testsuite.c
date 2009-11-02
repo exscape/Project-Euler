@@ -218,7 +218,24 @@ void test_int_pow() {
 	printf("Done testing int_pow(), %lu errors\n", errcount);
 }
 
+void test_list_get_index() {
+	uint64_list *list = list_create(20);
+	list_add(&list, 10);
+	list_add(&list, 20);
+	list_add(&list, 30);
+	list_add(&list, 40);
+
+	printf("index %u = %lu\n", 0, list_get_index(&list, 0));
+	printf("index %u = %lu\n", 3, list_get_index(&list, 3));
+	printf("index %u = %lu\n", 5, list_get_index(&list, 5));
+	printf("index %d = %lu\n", -1, list_get_index(&list, -1));
+	printf("index %d = %lu\n", -4, list_get_index(&list, -4));
+	printf("index %d = %lu\n", -5, list_get_index(&list, -5));
+}
+
 int main() {
+	test_list_get_index();
+	return 0;
 	test_int_pow();
 	test_get_digit();
 	test_get_digit_rev();

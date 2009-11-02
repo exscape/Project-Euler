@@ -212,7 +212,33 @@ int64_t list_bsearch(uint64_list **list, uint64_t n)  {
 		return ( p - (*list)->arr );
 }
 
+/* Fetches the value at the specified index from the list. Negative indices count from the back of the array,
+ * so -1 is the last element, -2 second to last etc.
+ * list: the list to work with
+ * index: the index, starting at 0 (unless negative)
+ * return value: the value at the index, or 0 on failure. XXX
+ */
+uint64_t list_get_index(uint64_list **list, ssize_t index) {
+	if (list == NULL)
+		goto FAIL; // XXX
+	
+	if (index < 0) {
+		if (-index > (*list)->used)
+			goto FAIL; // XXX
+		index = (*list)->used - (-index);
+	}
+
+	if (index > (ssize_t)( (ssize_t)(*list)->used - 1 )) { // XXX: Test this for used == 0
+		goto FAIL; // XXX
+	}
+	else {
+		return (*list)->arr[index];
+	}
+	FAIL:
+	return 0; // XXX
+}
+
 // XXX: This needs work - it's hardly obvious that the usage is
-// list_foreach_element(list) { do_something_with(list->arr[i]) } ... nor should it be that way!
+// list_foreach_element(list, i) { do_something_with(list->arr[i]) } ... nor should it be that way!
 #define list_foreach_element(list, loopvar) \
 	for (size_t loopvar = 0; loopvar < (*list)->used; (loopvar)++)
