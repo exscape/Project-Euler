@@ -105,6 +105,22 @@ uint8_t is_palindrome_str(const char *str) {
 	return 1;
 }
 
+/*
+ * num: the mpz_t to check for "palindromity"
+ * return value: 1 if it's a palindrome, otherwise 0
+ */
+uint8_t gmp_is_palindrome(mpz_t num) {
+	char *str;
+	gmp_asprintf(&str, "%Zd", num);
+	if (str == NULL) {
+		fprintf(stderr, "Error in gmp_is_palindrome!\n");
+		exit(1);
+	}
+	uint8_t palindrome = is_palindrome_str(str);
+	free(str);
+	return palindrome;
+}
+
 char *reverse(const char *str) {
 	int len = strlen(str);
 	char *rev = malloc(len+1); /* +1 for NUL */
